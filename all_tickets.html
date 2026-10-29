@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<tbody id="admin-requests-table" class="divide-y divide-slate-700/40">
+                            <!-- Renderizado via JS -->
+                        </tbody>
+                    </table><!DOCTYPE html>
 <html lang="pt-BR" class="h-full bg-slate-900 text-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TicketPass - Plataforma de Ingressos</title>
+    <title>All Tickets - Gestão de Eventos e Ingressos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -49,76 +52,76 @@
 </head>
 <body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- BARRA DE SIMULAÇÃO DE PERMISSÕES -->
+    <!-- BARRA DE SIMULAÇÃO DE PERMISSÕES E PAPÉIS (RBAC) -->
     <div id="role-bar" class="bg-slate-950 border-b border-slate-800 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
         <div class="flex items-center gap-2">
-            <span class="bg-brand-500/10 text-brand-500 px-2 py-0.5 rounded font-semibold border border-brand-500/20">
-                <i class="fa-solid fa-sliders mr-1"></i> Modo de Teste de Permissão
+            <span class="bg-brand-500/10 text-brand-500 px-2 py-0.5 rounded font-semibold border border-brand-500/20 flex items-center gap-1">
+                <i class="fa-solid fa-sliders"></i> Simulação de Nível de Acesso (RBAC)
             </span>
-            <span class="text-slate-400 hidden sm:inline">Alterne o nível de acesso para ver as mudanças na barra e no conteúdo:</span>
+            <span class="text-slate-400 hidden md:inline">Alterne o perfil para testar as regras de acesso e permissões:</span>
         </div>
         <div class="flex items-center gap-1 sm:gap-2">
-            <button onclick="setRole('deslogado')" id="btn-role-deslogado" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
-                <i class="fa-solid fa-user-slash mr-1"></i> Visitante
+            <button onclick="setRole('DESLOGADO')" id="btn-role-DESLOGADO" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user-slash mr-1"></i> Deslogado
             </button>
-            <button onclick="setRole('cliente')" id="btn-role-cliente" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
-                <i class="fa-solid fa-user mr-1"></i> Cliente
+            <button onclick="setRole('PUBLICO')" id="btn-role-PUBLICO" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user mr-1"></i> PUBLICO
             </button>
-            <button onclick="setRole('empresa')" id="btn-role-empresa" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
-                <i class="fa-solid fa-building mr-1"></i> Empresa
+            <button onclick="setRole('EMPRESA')" id="btn-role-EMPRESA" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-building mr-1"></i> EMPRESA
             </button>
-            <button onclick="setRole('adm')" id="btn-role-adm" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
-                <i class="fa-solid fa-shield-halved mr-1"></i> ADM
+            <button onclick="setRole('ADMIN')" id="btn-role-ADMIN" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-shield-halved mr-1"></i> ADMIN
             </button>
         </div>
     </div>
 
-    <!-- NAVBAR PRINCIPAL -->
+    <!-- NAVBAR PRINCIPAL (ALL TICKETS) -->
     <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20 gap-4">
                 
-                <!-- Logo -->
+                <!-- Logo All Tickets -->
                 <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
                         <i class="fa-solid fa-ticket text-slate-950 text-xl font-bold -rotate-12"></i>
                     </div>
                     <div>
                         <span class="text-xl font-black tracking-tight text-white flex items-center gap-1">
-                            Ticket<span class="text-brand-500">Pass</span>
+                            All<span class="text-brand-500">Tickets</span>
                         </span>
-                        <span class="block text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Eventos & Ingressos</span>
+                        <span class="block text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Plataforma de Eventos</span>
                     </div>
                 </div>
 
-                <!-- Desktop Navigation Box -->
+                <!-- Desktop Navigation Menu -->
                 <div class="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-700/50 shadow-inner">
                     <button onclick="navigateTo('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-white bg-slate-800 transition flex items-center gap-2">
-                        <i class="fa-solid fa-house text-brand-500"></i>
-                        <span>INÍCIO</span>
+                        <i class="fa-solid fa-store text-brand-500"></i>
+                        <span>FEED EVENTOS</span>
                     </button>
 
                     <!-- Área Logado -->
                     <div id="nav-group-user" class="flex items-center gap-1 px-1 border-l border-r border-slate-700/80 mx-1">
                         <button onclick="navigateTo('conta')" id="nav-conta" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
                             <i class="fa-regular fa-id-card text-brand-500"></i>
-                            <span>CONTA</span>
+                            <span>MINHA CONTA</span>
                         </button>
                         <button onclick="navigateTo('ingressos')" id="nav-ingressos" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
-                            <i class="fa-solid fa-ticket text-brand-500"></i>
-                            <span>INGRESSOS</span>
+                            <i class="fa-solid fa-wallet text-brand-500"></i>
+                            <span>CARTEIRA DIGITAL</span>
                         </button>
                     </div>
 
-                    <!-- Área Empresa / ADM -->
+                    <!-- Área Empresa / Admin -->
                     <div class="flex items-center gap-1">
                         <button onclick="navigateTo('empresa')" id="nav-empresa" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
                             <i class="fa-solid fa-building-user text-sky-400"></i>
-                            <span>EMPRESA</span>
+                            <span>PAINEL EMPRESA</span>
                         </button>
                         <button onclick="navigateTo('adm')" id="nav-adm" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 transition flex items-center gap-2">
                             <i class="fa-solid fa-user-shield"></i>
-                            <span>ADM</span>
+                            <span>PAINEL ADMIN</span>
                         </button>
                     </div>
 
@@ -137,21 +140,21 @@
         <!-- Menu Mobile Drawer -->
         <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-2">
             <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
-                <i class="fa-solid fa-house text-brand-500"></i> Início / Eventos
+                <i class="fa-solid fa-store text-brand-500"></i> Feed de Eventos
             </button>
             <div id="mobile-user-links" class="space-y-2 pt-2 border-t border-slate-800">
                 <button onclick="navigateTo('conta'); toggleMobileMenu()" id="mob-conta" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
-                    <i class="fa-regular fa-id-card text-brand-500"></i> Conta
+                    <i class="fa-regular fa-id-card text-brand-500"></i> Minha Conta
                 </button>
                 <button onclick="navigateTo('ingressos'); toggleMobileMenu()" id="mob-ingressos" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-ticket text-brand-500"></i> Meus Ingressos
+                    <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital
                 </button>
             </div>
             <button onclick="navigateTo('empresa'); toggleMobileMenu()" id="mob-empresa" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
-                <i class="fa-solid fa-building-user text-sky-400"></i> Área Empresa
+                <i class="fa-solid fa-building-user text-sky-400"></i> Painel Empresa
             </button>
             <button onclick="navigateTo('adm'); toggleMobileMenu()" id="mob-adm" class="w-full text-left px-3 py-2 rounded-lg text-amber-400 hover:bg-amber-400/10 font-medium flex items-center gap-2">
-                <i class="fa-solid fa-user-shield"></i> Painel ADM
+                <i class="fa-solid fa-user-shield"></i> Painel ADMIN
             </button>
             <div id="mobile-auth-container" class="pt-2 border-t border-slate-800">
                 <!-- Injetado via JS -->
@@ -162,40 +165,43 @@
     <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- BANNER DE STATUS DE ACESSO DA SIMULAÇÃO -->
+        <!-- BANNER DE STATUS DO PERFIL AUTENTICADO -->
         <div class="mb-6 p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-between flex-wrap gap-4">
             <div class="flex items-center gap-3">
                 <div id="current-role-badge-icon" class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300">
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div>
-                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Nível de Acesso Atual</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Perfil Atual de Acesso</div>
                     <div id="current-role-title" class="text-base font-bold text-white">Visitante (Deslogado)</div>
                 </div>
             </div>
             <div id="current-role-desc" class="text-xs text-slate-400 max-w-md">
-                Navegação restrita. Entre na sua conta para comprar ingressos ou acessar seus dados.
+                Navegação pública. Autentique-se para realizar compras de ingressos e acessar módulos restritos.
             </div>
         </div>
 
-        <!-- ABA 1: PÁGINA INICIAL / VITRINE DE EVENTOS -->
+        <!-- ABA 1: FEED DE EVENTOS PÚBLICO (/public) -->
         <section id="tab-home" class="tab-content space-y-8">
-            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-900/60 via-slate-900 to-slate-900 border border-slate-800 p-8 sm:p-12">
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 border border-slate-800 p-8 sm:p-12">
                 <div class="relative z-10 max-w-2xl space-y-4">
                     <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
-                        <i class="fa-solid fa-fire mr-1"></i> Os melhores eventos da cidade
+                        <i class="fa-solid fa-bolt mr-1"></i> All Tickets System
                     </span>
                     <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-                        Garanta seu lugar nos maiores shows e festivais.
+                        Gestão Centralizada de Eventos e Ingressos Digitais.
                     </h1>
                     <p class="text-slate-300 text-sm sm:text-base">
-                        Sua plataforma completa de ingressos digitais com praticidade, segurança e acesso imediato via QR Code.
+                        Emissão com validação de hashes criptográficos SHA-256 e split financeiro automático de 80% para produtoras e 20% para a plataforma.
                     </p>
-                    <div class="pt-2 flex items-center gap-2 max-w-lg">
-                        <div class="relative flex-1">
+                    <div class="pt-2 flex items-center gap-3 max-w-lg flex-wrap sm:flex-nowrap">
+                        <div class="relative flex-1 w-full">
                             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <input type="text" id="event-search" onkeyup="filterEvents()" placeholder="Buscar shows, teatro, festas..." class="w-full pl-11 pr-4 py-3 bg-slate-800/90 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                            <input type="text" id="event-search" onkeyup="filterEvents()" placeholder="Buscar atrações ou festivais..." class="w-full pl-11 pr-4 py-3 bg-slate-800/90 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
                         </div>
+                        <button onclick="openModal('modal-solicitar-vinculacao')" class="px-4 py-3 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 font-bold rounded-xl text-xs transition whitespace-nowrap flex items-center gap-2">
+                            <i class="fa-solid fa-building font-bold"></i> Virar Empresa
+                        </button>
                     </div>
                 </div>
                 <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
@@ -203,252 +209,277 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 overflow-x-auto pb-2">
+            <!-- Categorias Oficiais do Sistema -->
+            <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
                 <button onclick="filterCategory('todos')" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-brand-500/20">Todos os Eventos</button>
-                <button onclick="filterCategory('show')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows & Festivais</button>
-                <button onclick="filterCategory('teatro')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro & Stand-up</button>
-                <button onclick="filterCategory('esporte')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Esportes</button>
-                <button onclick="filterCategory('festas')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas & Baladas</button>
+                <button onclick="filterCategory('Shows e Festivais')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows e Festivais</button>
+                <button onclick="filterCategory('Teatro e Cultura')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro e Cultura</button>
+                <button onclick="filterCategory('Festas e Nightlife')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas e Nightlife</button>
             </div>
 
+            <!-- Grid de Cards de Eventos -->
             <div>
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sparkles text-amber-400"></i> Eventos em Destaque
+                        <i class="fa-solid fa-sparkles text-amber-400"></i> Eventos Disponíveis
                     </h2>
-                    <span class="text-xs text-slate-400" id="event-count">Exibindo todos os eventos</span>
+                    <span class="text-xs text-slate-400" id="event-count">Exibindo eventos</span>
                 </div>
                 
                 <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Cards renderizados via JS -->
+                    <!-- Cards renderizados dinamicamente via JS -->
                 </div>
             </div>
         </section>
 
-        <!-- ABA 2: CONTA DO USUÁRIO -->
+        <!-- ABA 2: MINHA CONTA DO USUÁRIO & SOLICITAÇÕES DE PARCERIA -->
         <section id="tab-conta" class="tab-content hidden space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
                     <i class="fa-regular fa-id-card text-brand-500"></i> Minha Conta
                 </h2>
-                <p class="text-sm text-slate-400">Gerencie seus dados pessoais, preferências e segurança.</p>
+                <p class="text-sm text-slate-400">Gerencie seus dados e acompanhe suas solicitações de parceiro comercial.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Resumo do Perfil -->
+                <!-- Profile Card -->
                 <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
                     <div class="text-center space-y-3">
                         <div class="w-24 h-24 mx-auto rounded-full bg-slate-700 border-4 border-brand-500/30 flex items-center justify-center text-4xl text-slate-300 font-bold relative">
-                            <span id="profile-avatar-initials">LS</span>
+                            <span id="profile-avatar-initials">U</span>
                             <span class="absolute bottom-0 right-0 w-6 h-6 bg-brand-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] text-slate-950">
                                 <i class="fa-solid fa-check"></i>
                             </span>
                         </div>
                         <div>
-                            <h3 id="profile-name" class="text-lg font-bold text-white">Lucas Silva</h3>
-                            <p id="profile-email" class="text-xs text-slate-400">lucas.silva@email.com</p>
+                            <h3 id="profile-name" class="text-lg font-bold text-white">Usuário Autenticado</h3>
+                            <p id="profile-email" class="text-xs text-slate-400">usuario@alltickets.com</p>
                         </div>
                         <span id="profile-badge" class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-bold uppercase">
-                            Cliente Verificado
+                            Papel: PUBLICO
                         </span>
                     </div>
 
-                    <div class="space-y-3 pt-4 border-t border-slate-700/60">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="text-slate-400">Membro desde:</span>
-                            <span class="text-slate-200 font-medium">Janeiro, 2024</span>
+                    <div class="space-y-3 pt-4 border-t border-slate-700/60 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Status da Conta:</span>
+                            <span class="text-slate-200 font-medium">Ativa</span>
                         </div>
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="text-slate-400">Ingressos Comprados:</span>
-                            <span class="text-brand-400 font-bold" id="profile-tickets-count">2</span>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Ingressos Adquiridos:</span>
+                            <span class="text-brand-400 font-bold" id="profile-tickets-count">0</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Formulário de Dados -->
-                <div class="lg:col-span-2 bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
-                    <h3 class="text-base font-bold text-white border-b border-slate-700/60 pb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-user-gear text-slate-400"></i> Informações Cadastrais
-                    </h3>
+                <!-- Formulário Cadastral e Vinculação -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
+                        <h3 class="text-base font-bold text-white border-b border-slate-700/60 pb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-slate-400"></i> Informações do Usuário
+                        </h3>
 
-                    <form onsubmit="saveProfile(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo</label>
-                                <input type="text" id="input-name" value="Lucas Silva" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                        <form onsubmit="saveProfile(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo</label>
+                                    <input type="text" id="input-name" value="Lucas Silva" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
+                                    <input type="email" id="input-email" value="lucas.silva@alltickets.com" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">CPF</label>
-                                <input type="text" value="123.456.789-00" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
-                                <input type="email" id="input-email" value="lucas.silva@email.com" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            <div class="pt-2 flex justify-end">
+                                <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md shadow-brand-500/20">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Alterações
+                                </button>
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Telefone / WhatsApp</label>
-                                <input type="text" value="(11) 98765-4321" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
-                            </div>
-                        </div>
+                        </form>
+                    </div>
 
-                        <div class="pt-4 flex justify-end gap-3">
-                            <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md shadow-brand-500/20">
-                                <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Alterações
+                    <!-- Card de Solicitação de Parceria -->
+                    <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-building-circle-check text-sky-400"></i> Solicitação de Vinculação Empresarial
+                            </h3>
+                            <button onclick="openModal('modal-solicitar-vinculacao')" class="px-3 py-1.5 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold text-xs rounded-lg transition">
+                                Nova Proposta
                             </button>
                         </div>
-                    </form>
+                        <p class="text-xs text-slate-400">
+                            Submeta seus dados de CNPJ para transformar seu perfil de PUBLICO para EMPRESA e publicar seus próprios eventos na plataforma.
+                        </p>
+                        <div id="user-requests-list" class="space-y-2 pt-2">
+                            <!-- Injetado dinamicamente via JS -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ABA 3: MEUS INGRESSOS -->
+        <!-- ABA 3: CARTEIRA DIGITAL DE INGRESSOS -->
         <section id="tab-ingressos" class="tab-content hidden space-y-6">
             <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-ticket text-brand-500"></i> Meus Ingressos
+                        <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital de Ingressos
                     </h2>
-                    <p class="text-sm text-slate-400">Acesse seus bilhetes virtuais e apresente os QR Codes no evento.</p>
+                    <p class="text-sm text-slate-400">Seus bilhetes com Hashes Criptográficos SHA-256 e QR Codes para acesso rápido à portaria.</p>
                 </div>
             </div>
 
             <div id="tickets-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Ingressos gerados via JS -->
+                <!-- Ingressos em carteira via JS -->
             </div>
         </section>
 
-        <!-- ABA 4: ÁREA DA EMPRESA / ORGANIZADOR -->
+        <!-- ABA 4: PAINEL DA EMPRESA / PRODUTOR (/company) -->
         <section id="tab-empresa" class="tab-content hidden space-y-6">
             <div class="border-b border-slate-800 pb-4 flex items-center justify-between flex-wrap gap-4">
                 <div>
                     <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-building-user text-sky-400"></i> Painel da Empresa / Produtora
+                        <i class="fa-solid fa-building-user text-sky-400"></i> Painel do Produtor
                     </h2>
-                    <p class="text-sm text-slate-400">Gerencie seus eventos cadastrados, vendas e novos lançamentos.</p>
+                    <p class="text-sm text-slate-400">Acompanhe seus KPIs de repasse financeiro (80%) e valide entradas no Módulo de Portaria.</p>
                 </div>
                 <button onclick="openModal('modal-novo-evento')" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Criar Novo Evento
+                    <i class="fa-solid fa-plus"></i> Cadastrar Evento
                 </button>
             </div>
 
-            <!-- Dashboard da Empresa -->
+            <!-- KPIs da Empresa -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Total de Ingressos Vendidos</span>
-                    <div class="text-2xl font-black text-white mt-1">1.480</div>
+                    <span class="text-xs text-slate-400 font-medium">Ingressos Vendidos</span>
+                    <div class="text-2xl font-black text-white mt-1" id="company-kpi-sold">0</div>
                 </div>
                 <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Receita Bruta</span>
-                    <div class="text-2xl font-black text-brand-400 mt-1">R$ 184.200,00</div>
+                    <span class="text-xs text-slate-400 font-medium">Receita Bruta Total</span>
+                    <div class="text-2xl font-black text-slate-300 mt-1" id="company-kpi-gross">R$ 0,00</div>
                 </div>
-                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Eventos Ativos</span>
-                    <div class="text-2xl font-black text-sky-400 mt-1">3</div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60 border-l-4 border-l-brand-500">
+                    <span class="text-xs text-brand-400 font-bold uppercase tracking-wider">Saldo Líquido a Receber (80%)</span>
+                    <div class="text-2xl font-black text-brand-400 mt-1" id="company-kpi-net">R$ 0,00</div>
                 </div>
             </div>
 
-            <!-- Tabela de Eventos Cadastrados -->
+            <!-- MÓDULO VALIDADOR DE PORTARIA (ANTIFRAUDE) -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4 shadow-xl">
+                <div class="flex items-center gap-3 border-b border-slate-700/60 pb-3">
+                    <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Módulo Validador de Portaria</h3>
+                        <p class="text-xs text-slate-400">Valide e queime o ingresso do cliente em tempo real via QR Hash SHA-256</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="input-gate-hash" placeholder="Insira o QR Hash (ex: QR-A9F82B10C4)..." class="w-full pl-11 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-400 outline-none text-sm font-mono uppercase">
+                    </div>
+                    <button onclick="validateTicketGate()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-double"></i> Validar Entrada
+                    </button>
+                </div>
+
+                <div id="gate-result-box" class="hidden p-4 rounded-xl border text-sm font-medium"></div>
+            </div>
+
+            <!-- Tabela de Eventos Cadastrados pela Empresa -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
-                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
-                    <span>Meus Eventos</span>
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white">
+                    <span>Atrações Cadastradas</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
                             <tr>
-                                <th class="p-3.5">Evento</th>
-                                <th class="p-3.5">Data</th>
-                                <th class="p-3.5">Vendidos</th>
-                                <th class="p-3.5">Status</th>
-                                <th class="p-3.5 text-right">Ação</th>
+                                <th class="p-3.5">Título</th>
+                                <th class="p-3.5">Categoria</th>
+                                <th class="p-3.5">Preço Unitário</th>
+                                <th class="p-3.5">Estoque</th>
+                                <th class="p-3.5">Curtidas</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-700/40">
-                            <tr>
-                                <td class="p-3.5 font-bold text-white">Festival Rock In Rio - Side Show</td>
-                                <td class="p-3.5">15/11/2026</td>
-                                <td class="p-3.5">850 / 1000</td>
-                                <td class="p-3.5"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded-md font-bold">Publicado</span></td>
-                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
-                            </tr>
-                            <tr>
-                                <td class="p-3.5 font-bold text-white">Sertanejo Night Live</td>
-                                <td class="p-3.5">20/12/2026</td>
-                                <td class="p-3.5">420 / 500</td>
-                                <td class="p-3.5"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded-md font-bold">Publicado</span></td>
-                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
-                            </tr>
-                            <tr>
-                                <td class="p-3.5 font-bold text-white">Comédia Stand-up da Virada</td>
-                                <td class="p-3.5">31/12/2026</td>
-                                <td class="p-3.5">210 / 300</td>
-                                <td class="p-3.5"><span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-md font-bold">Análise</span></td>
-                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
-                            </tr>
+                        <tbody id="company-events-table" class="divide-y divide-slate-700/40">
+                            <!-- Linhas via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- ABA 5: PAINEL ADMINISTRATIVO (ADM) -->
+        <!-- ABA 5: PAINEL ADMINISTRATIVO (/admin) -->
         <section id="tab-adm" class="tab-content hidden space-y-6">
             <div class="border-b border-slate-800 pb-4">
                 <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-user-shield text-amber-400"></i> Painel Geral de Administração (ADM)
+                    <i class="fa-solid fa-user-shield text-amber-400"></i> Painel Administrativo (ADMIN)
                 </h2>
-                <p class="text-sm text-slate-400">Visão global da plataforma, aprovações de organizadores e controle de usuários.</p>
+                <p class="text-sm text-slate-400">Métricas globais da All Tickets, gestão de papéis e auditoria de solicitações de vinculação.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Usuários Registrados</span>
-                    <div class="text-2xl font-black text-white mt-1">12.450</div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Volume Total Transacionado (GMV)</span>
+                    <div class="text-2xl font-black text-white mt-1" id="admin-kpi-gmv">R$ 0,00</div>
                 </div>
-                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Empresas Parceiras</span>
-                    <div class="text-2xl font-black text-sky-400 mt-1">142</div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60 border-l-4 border-l-amber-400">
+                    <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Comissão Retida All Tickets (20%)</span>
+                    <div class="text-2xl font-black text-amber-400 mt-1" id="admin-kpi-commission">R$ 0,00</div>
                 </div>
-                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Taxa de Plataforma (GMV)</span>
-                    <div class="text-2xl font-black text-brand-400 mt-1">R$ 45.120,00</div>
-                </div>
-                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
-                    <span class="text-xs text-slate-400 font-medium">Aprovações Pendentes</span>
-                    <div class="text-2xl font-black text-amber-400 mt-1">5</div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Total de Ingressos Emitidos</span>
+                    <div class="text-2xl font-black text-sky-400 mt-1" id="admin-kpi-tickets">0</div>
                 </div>
             </div>
 
-            <!-- Tabela de Aprovações Pendentes -->
-            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+            <!-- Fila de Auditoria de Solicitações de Vinculação (RN-05) -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden space-y-2">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
-                    <span>Solicitações de Aprovamento de Eventos</span>
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-amber-400"></i> Fila de Auditoria: Solicitações de Vinculação
+                    </span>
+                    <span class="text-xs text-slate-400" id="requests-count">0 pendente(s)</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
                             <tr>
-                                <th class="p-3.5">Organizador</th>
-                                <th class="p-3.5">Nome do Evento</th>
-                                <th class="p-3.5">Data Prevista</th>
-                                <th class="p-3.5">Valor do Ingresso</th>
-                                <th class="p-3.5 text-right">Ações</th>
+                                <th class="p-3.5">Empresa / Solicitante</th>
+                                <th class="p-3.5">CNPJ</th>
+                                <th class="p-3.5">E-mail</th>
+                                <th class="p-3.5">Status</th>
+                                <th class="p-3.5 text-right">Ações de Aprovação</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-700/40">
+                </div>
+            </div>
+
+            <!-- Tabela de Gestão de Usuários e Promoção de Papéis -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-users text-sky-400"></i> Gestão de Usuários e Promoção de Papéis
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
                             <tr>
-                                <td class="p-3.5 font-bold text-white">Live Eventos Ltda</td>
-                                <td class="p-3.5">Comédia Stand-up da Virada</td>
-                                <td class="p-3.5">31/12/2026</td>
-                                <td class="p-3.5">R$ 60,00</td>
-                                <td class="p-3.5 text-right space-x-2">
-                                    <button class="px-2 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400">Aprovar</button>
-                                    <button class="px-2 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30">Rejeitar</button>
-                                </td>
+                                <th class="p-3.5">Nome</th>
+                                <th class="p-3.5">E-mail</th>
+                                <th class="p-3.5">Papel Atual</th>
+                                <th class="p-3.5 text-right">Promover Papel</th>
                             </tr>
+                        </thead>
+                        <tbody id="admin-users-table" class="divide-y divide-slate-700/40">
+                            <!-- Renderizado via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -457,62 +488,103 @@
 
     </main>
 
-    <!-- MODAL: COMPRAR INGRESSO -->
+    <!-- MODAL: CHECKOUT DE COMPRA COM SPLIT 80/20 -->
     <div id="modal-comprar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
             <button onclick="closeModal('modal-comprar')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <div class="space-y-2">
-                <span class="text-xs font-extrabold text-brand-500 uppercase tracking-wider">Confirmar Compra</span>
-                <h3 id="modal-event-title" class="text-xl font-bold text-white">Nome do Evento</h3>
-                <p id="modal-event-price" class="text-sm font-semibold text-slate-300">R$ 0,00</p>
+            <div>
+                <span class="text-[10px] font-extrabold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">Checkout Seguro</span>
+                <h3 id="modal-event-title" class="text-xl font-extrabold text-white mt-1">Nome do Evento</h3>
+                <p id="modal-event-stock" class="text-xs font-semibold text-slate-400">Estoque restante: -</p>
             </div>
             
-            <div class="space-y-4 pt-2 border-t border-slate-800">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Quantidade</label>
-                    <select id="modal-qty" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        <option value="1">1 Ingresso</option>
-                        <option value="2">2 Ingressos</option>
-                        <option value="3">3 Ingressos</option>
-                    </select>
+            <!-- Detalhamento de Divisão Financeira (Split 80/20) -->
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-800 pb-1">Divisão Transacional (RN-01)</span>
+                <div class="flex justify-between text-slate-300">
+                    <span>Preço Unitário:</span>
+                    <span id="split-unit-price" class="font-bold text-white">R$ 0,00</span>
                 </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Forma de Pagamento</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" class="p-3 bg-slate-800 border border-brand-500/50 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-pix text-brand-400 text-base"></i> PIX Instantâneo
-                        </button>
-                        <button type="button" class="p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-slate-400 flex items-center justify-center gap-2">
-                            <i class="fa-regular fa-credit-card text-base"></i> Cartão
-                        </button>
-                    </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Repasse Produtor (80%):</span>
+                    <span id="split-company-share" class="font-semibold text-slate-300">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Taxa All Tickets (20%):</span>
+                    <span id="split-platform-share" class="font-semibold text-amber-400">R$ 0,00</span>
                 </div>
             </div>
 
-            <button onclick="confirmPurchase()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20">
-                Finalizar Pagamento
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Método de Pagamento</label>
+                    <select id="modal-payment-method" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                        <option value="PIX">PIX Instantâneo</option>
+                        <option value="CREDIT_CARD">Cartão de Crédito</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="executePurchase()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-lock"></i> Confirmar Compra
             </button>
         </div>
     </div>
 
-    <!-- MODAL: VER QR CODE DO INGRESSO -->
+    <!-- MODAL: VISUALIZAR QR CODE -->
     <div id="modal-qrcode" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
             <button onclick="closeModal('modal-qrcode')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 id="qr-event-title" class="text-lg font-bold text-white">Ingresso Virtual</h3>
+            <h3 id="qr-event-title" class="text-base font-bold text-white">Ingresso Digital</h3>
             <div class="p-4 bg-white rounded-2xl inline-block shadow-inner">
-                <!-- QR Code Simulado via FontAwesome -->
                 <i class="fa-solid fa-qrcode text-9xl text-slate-950"></i>
             </div>
-            <p class="text-xs text-slate-400">Apresente este código na entrada do evento para validação.</p>
+            <div>
+                <span class="text-[10px] text-slate-400 block font-mono">HASH SHA-256 ÚNICO:</span>
+                <span id="qr-hash-display" class="text-xs font-bold text-brand-400 font-mono select-all">QR-A9F82B10C4</span>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL: NOVO EVENTO (EMPRESA) -->
+    <!-- MODAL: SOLICITAR VINCULAÇÃO EMPRESARIAL -->
+    <div id="modal-solicitar-vinculacao" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-solicitar-vinculacao')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-building text-sky-400"></i> Solicitar Vinculação de Empresa
+            </h3>
+            <p class="text-xs text-slate-400">Submeta a proposta da sua empresa para aprovação da equipe administrativa.</p>
+            <form onsubmit="submitCompanyBindingRequest(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Nome Fantasia / Razão Social</label>
+                    <input type="text" id="req-company-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">CNPJ</label>
+                    <input type="text" id="req-cnpj" required placeholder="00.000.000/0001-00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">E-mail Comercial</label>
+                    <input type="email" id="req-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Proposta / Descrição da Produtora</label>
+                    <textarea id="req-desc" required rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
+                    Enviar Solicitação
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CADASTRAR NOVO EVENTO (EMPRESA) -->
     <div id="modal-novo-evento" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
             <button onclick="closeModal('modal-novo-evento')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -521,65 +593,80 @@
             <h3 class="text-lg font-bold text-white">Cadastrar Novo Evento</h3>
             <form onsubmit="createEvent(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Título do Evento</label>
+                    <label class="block text-xs text-slate-400 mb-1">Título da Atração</label>
                     <input type="text" id="new-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs text-slate-400 mb-1">Categoria</label>
                         <select id="new-cat" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
-                            <option value="show">Show / Festival</option>
-                            <option value="teatro">Teatro / Stand-up</option>
-                            <option value="esporte">Esporte</option>
-                            <option value="festas">Festa</option>
+                            <option value="Shows e Festivais">Shows e Festivais</option>
+                            <option value="Teatro e Cultura">Teatro e Cultura</option>
+                            <option value="Festas e Nightlife">Festas e Nightlife</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs text-slate-400 mb-1">Preço (R$)</label>
-                        <input type="number" id="new-price" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                        <input type="number" step="0.01" id="new-price" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Estoque</label>
+                        <input type="number" id="new-stock" required min="1" value="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Data do Evento</label>
-                    <input type="date" id="new-date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
-                </div>
                 <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
-                    Enviar para Aprovação
+                    Publicar Evento
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT PRINCIPAL -->
+    <!-- JAVASCRIPT DE LÓGICA E ESTADO DA APLICAÇÃO -->
     <script>
-        // Dados dos Eventos
-        const initialEvents = [
-            { id: 1, title: 'Festival Rock In Rio - Side Show', category: 'show', price: 180, date: '15 de Novembro, 2026', location: 'Arena Central', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
-            { id: 2, title: 'Comédia Stand-up da Virada', category: 'teatro', price: 60, date: '31 de Dezembro, 2026', location: 'Teatro Municipal', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
-            { id: 3, title: 'Final da Copa Regional', category: 'esporte', price: 90, date: '10 de Dezembro, 2026', location: 'Estádio Olímpico', img: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&auto=format&fit=crop&q=80' },
-            { id: 4, title: 'Sertanejo Night Live', category: 'festas', price: 120, date: '20 de Dezembro, 2026', location: 'Espaço Hall', img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+        // Repositório em Memória
+        let currentRole = 'DESLOGADO'; // 'DESLOGADO', 'PUBLICO', 'EMPRESA', 'ADMIN'
+        
+        const usersDatabase = [
+            { id: 'usr-1', name: 'Lucas Silva', email: 'lucas.silva@alltickets.com', role: 'PUBLICO' },
+            { id: 'usr-2', name: 'Maceió Eventos Ltda', email: 'contato@maceioeventos.com', role: 'EMPRESA' },
+            { id: 'usr-3', name: 'Admin Geral', email: 'admin@alltickets.com', role: 'ADMIN' }
         ];
 
-        let currentRole = 'deslogado'; // 'deslogado', 'cliente', 'empresa', 'adm'
-        let myTickets = [
-            { id: 'T-9823', title: 'Festival Rock In Rio - Side Show', date: '15 Nov 2026', qty: 1, status: 'Ativo' },
-            { id: 'T-4412', title: 'Comédia Stand-up da Virada', date: '31 Dez 2026', qty: 2, status: 'Ativo' }
+        const companyRequests = [
+            { id: 'REQ-101', company_name: 'Maceió Sounds Produções', cnpj: '12.345.678/0001-90', email: 'contato@maceiosounds.com', description: 'Produtora de festivais em Alagoas', status: 'PENDENTE', user_id: 'usr-1' }
         ];
+
+        const eventsDatabase = [
+            { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
+            { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
+            { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+        ];
+
+        const ticketsDatabase = [
+            { id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', user_id: 'usr-1', event_id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', event_title: 'Maceió Summer Sounds 2026', price: 100.00, qr_hash: 'QR-A9F82B10C4', is_used: false, created_at: '2026-09-17T09:10:00Z' }
+        ];
+
+        const financialTransactions = [
+            { id: 'fin-1', ticket_id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', total_amount: 100.00, company_share_80: 80.00, platform_share_20: 20.00 }
+        ];
+
         let selectedEventForPurchase = null;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
-            renderEvents(initialEvents);
+            renderEvents(eventsDatabase);
             renderMyTickets();
-            setRole('deslogado');
+            renderAdminTables();
+            renderUserRequests();
+            renderCompanyDashboard();
+            setRole('DESLOGADO');
         });
 
-        // Controle de Permissões / Papéis
+        // Alternar Papel de Acesso (RBAC)
         function setRole(role) {
             currentRole = role;
 
-            // Atualiza Destaque dos Botões de Papel
-            ['deslogado', 'cliente', 'empresa', 'adm'].forEach(r => {
+            ['DESLOGADO', 'PUBLICO', 'EMPRESA', 'ADMIN'].forEach(r => {
                 const btn = document.getElementById(`btn-role-${r}`);
                 if (r === role) {
                     btn.className = 'px-2.5 py-1 rounded text-white bg-brand-600 font-bold';
@@ -588,24 +675,23 @@
                 }
             });
 
-            // Atualiza Banner de Nível
             const roleTitle = document.getElementById('current-role-title');
             const roleDesc = document.getElementById('current-role-desc');
             const authContainer = document.getElementById('auth-buttons-container');
             const mobAuthContainer = document.getElementById('mobile-auth-container');
 
-            if (role === 'deslogado') {
+            if (role === 'DESLOGADO') {
                 roleTitle.textContent = 'Visitante (Deslogado)';
-                roleDesc.textContent = 'Navegação restrita. Entre na sua conta para comprar ingressos ou gerenciar seus dados.';
+                roleDesc.textContent = 'Navegação pública. Autentique-se para realizar compras de ingressos e acessar módulos restritos.';
                 
                 authContainer.innerHTML = `
-                    <button onclick="setRole('cliente')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition">
-                        Entrar / Criar Conta
+                    <button onclick="setRole('PUBLICO')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition">
+                        Entrar / Autenticar
                     </button>
                 `;
                 mobAuthContainer.innerHTML = `
-                    <button onclick="setRole('cliente'); toggleMobileMenu()" class="w-full py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-sm">
-                        Entrar na Conta
+                    <button onclick="setRole('PUBLICO'); toggleMobileMenu()" class="w-full py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-sm">
+                        Entrar como PUBLICO
                     </button>
                 `;
 
@@ -614,17 +700,18 @@
                 document.getElementById('nav-adm').classList.add('hidden');
                 document.getElementById('mob-adm').classList.add('hidden');
             } else {
-                let roleLabel = role === 'cliente' ? 'Cliente' : (role === 'empresa' ? 'Empresa / Produtora' : 'Administrador');
-                roleTitle.textContent = `Logado como: ${roleLabel}`;
-                roleDesc.textContent = 'Acesso total liberado para as funcionalidades correspondentes do seu papel.';
+                roleTitle.textContent = `Autenticado como: ${role}`;
+                roleDesc.textContent = `Permissões ativas para o papel ${role} conforme regras RBAC.`;
+
+                document.getElementById('profile-badge').textContent = `Papel: ${role}`;
 
                 authContainer.innerHTML = `
-                    <button onclick="setRole('deslogado')" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
+                    <button onclick="setRole('DESLOGADO')" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
                         <i class="fa-solid fa-right-from-bracket"></i> Sair
                     </button>
                 `;
                 mobAuthContainer.innerHTML = `
-                    <button onclick="setRole('deslogado'); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-sm">
+                    <button onclick="setRole('DESLOGADO'); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-sm">
                         Sair da Conta
                     </button>
                 `;
@@ -632,7 +719,7 @@
                 document.getElementById('nav-group-user').classList.remove('opacity-40');
                 document.getElementById('nav-empresa').classList.remove('opacity-40');
 
-                if (role === 'adm') {
+                if (role === 'ADMIN') {
                     document.getElementById('nav-adm').classList.remove('hidden');
                     document.getElementById('mob-adm').classList.remove('hidden');
                 } else {
@@ -641,36 +728,31 @@
                 }
             }
 
-            // Volta para Home
             navigateTo('home');
         }
 
         // Navegação de Abas
         function navigateTo(tabName) {
-            // Verificar Permissões antes de navegar
-            if (currentRole === 'deslogado' && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
-                alert('Você precisa estar logado para acessar esta área! Clique em "Entrar" ou selecione um modo de permissão acima.');
+            if (currentRole === 'DESLOGADO' && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
+                alert('CB-03 Bloqueio: Você precisa estar autenticado para acessar esta rota!');
                 return;
             }
 
-            if (currentRole !== 'adm' && tabName === 'adm') {
-                alert('Acesso negado: Apenas administradores podem acessar o Painel ADM.');
+            if (currentRole !== 'ADMIN' && tabName === 'adm') {
+                alert('CB-03 Forbidden 403: Apenas o papel ADMIN possui permissão para acessar o Painel Administrativo.');
                 return;
             }
 
-            if (currentRole === 'cliente' && tabName === 'empresa') {
-                alert('Sua conta é do tipo Cliente. Alterne para o perfil "Empresa" para gerenciar eventos.');
+            if (currentRole === 'PUBLICO' && tabName === 'empresa') {
+                alert('CB-03 Forbidden 403: Seu papel atual é PUBLICO. Submeta uma solicitação de vinculação para virar EMPRESA.');
                 return;
             }
 
-            // Esconder todas as abas
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
 
-            // Mostrar a selecionada
             const target = document.getElementById(`tab-${tabName}`);
             if (target) target.classList.remove('hidden');
 
-            // Atualizar estado ativo dos botões da navbar
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-800', 'text-white');
                 btn.classList.add('text-slate-300');
@@ -681,34 +763,41 @@
             }
         }
 
-        // Renderizar Eventos na Vitrine
+        // Renderizar Feed de Eventos
         function renderEvents(events) {
             const grid = document.getElementById('events-grid');
             document.getElementById('event-count').textContent = `Exibindo ${events.length} evento(s)`;
             grid.innerHTML = '';
 
             events.forEach(evt => {
+                const isOutOfStock = evt.stock <= 0;
                 const card = document.createElement('div');
-                card.className = 'bg-slate-800/60 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl hover:border-slate-600 transition flex flex-col justify-between';
+                card.className = 'bg-slate-800/60 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between';
                 card.innerHTML = `
                     <div>
                         <div class="h-48 overflow-hidden relative">
                             <img src="${evt.img}" alt="${evt.title}" class="w-full h-full object-cover">
                             <span class="absolute top-3 right-3 px-3 py-1 bg-slate-950/80 backdrop-blur-md text-brand-400 border border-brand-500/30 rounded-full text-[10px] font-bold uppercase">
-                                R$ ${evt.price},00
+                                R$ ${evt.price.toFixed(2)}
+                            </span>
+                            <span class="absolute top-3 left-3 px-2.5 py-1 ${isOutOfStock ? 'bg-rose-500/90' : 'bg-slate-900/80'} text-white rounded-lg text-[10px] font-bold">
+                                ${isOutOfStock ? 'Esgotado' : `Estoque: ${evt.stock}`}
                             </span>
                         </div>
                         <div class="p-5 space-y-3">
+                            <span class="text-[10px] uppercase font-extrabold tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">${evt.category}</span>
                             <h3 class="font-bold text-white text-base leading-snug">${evt.title}</h3>
-                            <div class="space-y-1 text-xs text-slate-400">
-                                <p class="flex items-center gap-2"><i class="fa-regular fa-calendar text-brand-500"></i> ${evt.date}</p>
-                                <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-500"></i> ${evt.location}</p>
+                            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                                <button onclick="likeEvent('${evt.id}')" class="flex items-center gap-1.5 text-rose-400 hover:text-rose-300 font-semibold bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 transition">
+                                    <i class="fa-solid fa-heart"></i> ${evt.likes_count} Curtidas
+                                </button>
+                                <span>Organizador: Produtora</span>
                             </div>
                         </div>
                     </div>
                     <div class="p-5 pt-0">
-                        <button onclick="openBuyModal(${evt.id})" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition shadow-md shadow-brand-500/10 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-ticket"></i> Comprar Ingresso
+                        <button onclick="openBuyModal('${evt.id}')" ${isOutOfStock ? 'disabled' : ''} class="w-full py-2.5 ${isOutOfStock ? 'bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-brand-500 hover:bg-brand-600 text-slate-950'} font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-ticket"></i> ${isOutOfStock ? 'Ingressos Esgotados' : 'Comprar Ingresso'}
                         </button>
                     </div>
                 `;
@@ -716,27 +805,135 @@
             });
         }
 
-        // Renderizar Ingressos Comprados
-        function renderMyTickets() {
-            const container = document.getElementById('tickets-container');
-            document.getElementById('profile-tickets-count').textContent = myTickets.length;
-            container.innerHTML = '';
+        // Ação Curtir
+        function likeEvent(evtId) {
+            const evt = eventsDatabase.find(e => e.id === evtId);
+            if (evt) {
+                evt.likes_count += 1;
+                renderEvents(eventsDatabase);
+                renderCompanyDashboard();
+            }
+        }
 
-            if (myTickets.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 text-sm">Você ainda não comprou ingressos.</p>`;
+        // Filtro de Busca e Categoria
+        function filterEvents() {
+            const query = document.getElementById('event-search').value.toLowerCase();
+            const filtered = eventsDatabase.filter(e => e.title.toLowerCase().includes(query));
+            renderEvents(filtered);
+        }
+
+        function filterCategory(cat) {
+            if (cat === 'todos') {
+                renderEvents(eventsDatabase);
+            } else {
+                const filtered = eventsDatabase.filter(e => e.category === cat);
+                renderEvents(filtered);
+            }
+        }
+
+        // Abrir Checkout de Compra (RN-01 Split 80/20)
+        function openBuyModal(eventId) {
+            if (currentRole === 'DESLOGADO') {
+                alert('401 Unauthorized: Efetue o login para comprar ingressos.');
                 return;
             }
 
-            myTickets.forEach(ticket => {
+            selectedEventForPurchase = eventsDatabase.find(e => e.id === eventId);
+            
+            // CB-01 Verificar Estoque Esgotado
+            if (selectedEventForPurchase.stock <= 0) {
+                alert('400 Bad Request: Ingressos esgotados para este evento.');
+                return;
+            }
+
+            const total = selectedEventForPurchase.price;
+            const companyShare = total * 0.80;
+            const platformShare = total * 0.20;
+
+            document.getElementById('modal-event-title').textContent = selectedEventForPurchase.title;
+            document.getElementById('modal-event-stock').textContent = `Estoque disponível: ${selectedEventForPurchase.stock} unidades`;
+            document.getElementById('split-unit-price').textContent = `R$ ${total.toFixed(2)}`;
+            document.getElementById('split-company-share').textContent = `R$ ${companyShare.toFixed(2)}`;
+            document.getElementById('split-platform-share').textContent = `R$ ${platformShare.toFixed(2)}`;
+
+            openModal('modal-comprar');
+        }
+
+        // Executar Checkout (RN-01, RN-02, RN-03)
+        function executePurchase() {
+            if (!selectedEventForPurchase) return;
+
+            // RN-02 Verificação de Estoque Atômica
+            if (selectedEventForPurchase.stock <= 0) {
+                alert('CB-01 Error: Estoque esgotado no momento da confirmação!');
+                closeModal('modal-comprar');
+                return;
+            }
+
+            // Decrementar estoque (RN-02)
+            selectedEventForPurchase.stock -= 1;
+
+            // Gerar SHA-256 Hash Único (RN-03)
+            const randomHash = 'QR-' + Math.random().toString(16).substring(2, 12).toUpperCase();
+            
+            const total = selectedEventForPurchase.price;
+            const companyShare = total * 0.80;
+            const platformShare = total * 0.20;
+
+            const newTicket = {
+                id: `tkt-${Date.now()}`,
+                user_id: 'usr-1',
+                event_id: selectedEventForPurchase.id,
+                event_title: selectedEventForPurchase.title,
+                price: total,
+                qr_hash: randomHash,
+                is_used: false,
+                created_at: new Date().toISOString()
+            };
+
+            const newTransaction = {
+                id: `fin-${Date.now()}`,
+                ticket_id: newTicket.id,
+                total_amount: total,
+                company_share_80: companyShare,
+                platform_share_20: platformShare
+            };
+
+            ticketsDatabase.push(newTicket);
+            financialTransactions.push(newTransaction);
+
+            // Atualizar UI
+            renderEvents(eventsDatabase);
+            renderMyTickets();
+            renderCompanyDashboard();
+            renderAdminTables();
+
+            closeModal('modal-comprar');
+            alert(`🎉 Compra realizada com sucesso!\n\nQR Hash: ${randomHash}\nSplit: R$ ${companyShare.toFixed(2)} (Empresa) | R$ ${platformShare.toFixed(2)} (All Tickets)`);
+            navigateTo('ingressos');
+        }
+
+        // Renderizar Ingressos Comprados
+        function renderMyTickets() {
+            const container = document.getElementById('tickets-container');
+            document.getElementById('profile-tickets-count').textContent = ticketsDatabase.length;
+            container.innerHTML = '';
+
+            if (ticketsDatabase.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-sm">Sua carteira digital está vazia.</p>`;
+                return;
+            }
+
+            ticketsDatabase.forEach(ticket => {
                 const item = document.createElement('div');
-                item.className = 'bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center justify-between gap-4';
+                item.className = `bg-slate-800/60 border ${ticket.is_used ? 'border-rose-500/40 bg-rose-950/10' : 'border-slate-700/60'} p-5 rounded-2xl flex items-center justify-between gap-4`;
                 item.innerHTML = `
                     <div class="space-y-1">
-                        <span class="text-[10px] font-extrabold text-brand-500 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">${ticket.id}</span>
-                        <h4 class="font-bold text-white text-sm">${ticket.title}</h4>
-                        <p class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${ticket.date} • ${ticket.qty}x Ingresso</p>
+                        <span class="text-[10px] font-mono font-extrabold ${ticket.is_used ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' : 'text-brand-500 bg-brand-500/10 border-brand-500/20'} px-2 py-0.5 rounded border">${ticket.qr_hash}</span>
+                        <h4 class="font-bold text-white text-sm">${ticket.event_title}</h4>
+                        <p class="text-xs text-slate-400">Status: <strong class="${ticket.is_used ? 'text-rose-400' : 'text-brand-400'}">${ticket.is_used ? 'UTILIZADO (UTILIZADO NA PORTARIA)' : 'ATIVO (VÁLIDO)'}</strong></p>
                     </div>
-                    <button onclick="openModal('modal-qrcode')" class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs rounded-xl flex items-center gap-2 transition">
+                    <button onclick="showQRCode('${ticket.event_title}', '${ticket.qr_hash}')" class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs rounded-xl flex items-center gap-2 transition">
                         <i class="fa-solid fa-qrcode text-brand-400"></i> QR Code
                     </button>
                 `;
@@ -744,78 +941,228 @@
             });
         }
 
-        // Filtro de Busca
-        function filterEvents() {
-            const query = document.getElementById('event-search').value.toLowerCase();
-            const filtered = initialEvents.filter(e => e.title.toLowerCase().includes(query));
-            renderEvents(filtered);
+        function showQRCode(title, hash) {
+            document.getElementById('qr-event-title').textContent = title;
+            document.getElementById('qr-hash-display').textContent = hash;
+            openModal('modal-qrcode');
         }
 
-        // Filtro de Categoria
-        function filterCategory(cat) {
-            if (cat === 'todos') {
-                renderEvents(initialEvents);
-            } else {
-                const filtered = initialEvents.filter(e => e.category === cat);
-                renderEvents(filtered);
-            }
-        }
+        // MÓDULO VALIDADOR DE PORTARIA (RN-04, CB-02, CB-04)
+        function validateTicketGate() {
+            const inputHash = document.getElementById('input-gate-hash').value.trim().toUpperCase();
+            const resultBox = document.getElementById('gate-result-box');
+            resultBox.classList.remove('hidden', 'bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300', 'bg-rose-500/20', 'border-rose-500/40', 'text-rose-300', 'bg-amber-500/20', 'border-amber-500/40', 'text-amber-300');
 
-        // Compra de Ingresso
-        function openBuyModal(eventId) {
-            if (currentRole === 'deslogado') {
-                alert('Por favor, entre na sua conta para efetuar a compra do ingresso.');
+            if (!inputHash) {
+                alert('Informe um código Hash para validação.');
                 return;
             }
 
-            selectedEventForPurchase = initialEvents.find(e => e.id === eventId);
-            document.getElementById('modal-event-title').textContent = selectedEventForPurchase.title;
-            document.getElementById('modal-event-price').textContent = `R$ ${selectedEventForPurchase.price},00 / ingresso`;
-            openModal('modal-comprar');
+            const ticket = ticketsDatabase.find(t => t.qr_hash === inputHash);
+
+            // CB-04 Hash Inexistente
+            if (!ticket) {
+                resultBox.classList.add('bg-amber-500/20', 'border-amber-500/40', 'text-amber-300');
+                resultBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <strong>404 Not Found:</strong> Código Hash "${inputHash}" não cadastrado no banco de dados.`;
+                return;
+            }
+
+            // CB-02 Tentativa de Reutilização (Antifraude RN-04)
+            if (ticket.is_used) {
+                resultBox.classList.add('bg-rose-500/20', 'border-rose-500/40', 'text-rose-300');
+                resultBox.innerHTML = `<i class="fa-solid fa-ban mr-2"></i> <strong>400 Bad Request (ALERTA ANTIFRAUDE):</strong> Ingresso já utilizado anteriormente na portaria (USED_TICKET). Entrada REJEITADA!`;
+                return;
+            }
+
+            // Sucesso na Validação
+            ticket.is_used = true;
+            ticket.used_at = new Date().toISOString();
+
+            resultBox.classList.add('bg-emerald-500/20', 'border-emerald-500/40', 'text-emerald-300');
+            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>200 OK - VALIDATED:</strong> Entrada liberada com sucesso! Bilhete "${ticket.event_title}" validado e queimado no sistema.`;
+
+            renderMyTickets();
         }
 
-        function confirmPurchase() {
-            const qty = parseInt(document.getElementById('modal-qty').value);
-            const newTicket = {
-                id: `T-${Math.floor(1000 + Math.random() * 9000)}`,
-                title: selectedEventForPurchase.title,
-                date: selectedEventForPurchase.date,
-                qty: qty,
-                status: 'Ativo'
+        // Submeter Solicitação de Vinculação Empresarial
+        function submitCompanyBindingRequest(e) {
+            e.preventDefault();
+            const name = document.getElementById('req-company-name').value;
+            const cnpj = document.getElementById('req-cnpj').value;
+            const email = document.getElementById('req-email').value;
+            const desc = document.getElementById('req-desc').value;
+
+            const newReq = {
+                id: `REQ-${Math.floor(100 + Math.random() * 900)}`,
+                company_name: name,
+                cnpj: cnpj,
+                email: email,
+                description: desc,
+                status: 'PENDENTE',
+                user_id: 'usr-1'
             };
 
-            myTickets.push(newTicket);
-            renderMyTickets();
-            closeModal('modal-comprar');
-            alert('🎉 Compra realizada com sucesso! O seu ingresso já está disponível na aba "Meus Ingressos".');
-            navigateTo('ingressos');
+            companyRequests.push(newReq);
+            renderUserRequests();
+            renderAdminTables();
+            closeModal('modal-solicitar-vinculacao');
+            alert('Solicitação de vinculação submetida com sucesso! Aguarde análise do papel ADMIN.');
         }
 
-        // Criar Novo Evento (Empresa)
+        // Renderizar Solicitações no Perfil
+        function renderUserRequests() {
+            const list = document.getElementById('user-requests-list');
+            list.innerHTML = '';
+
+            companyRequests.forEach(req => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-slate-900 border border-slate-700/60 rounded-xl flex items-center justify-between text-xs';
+                item.innerHTML = `
+                    <div>
+                        <strong class="text-white block">${req.company_name} (${req.cnpj})</strong>
+                        <span class="text-slate-400">${req.description}</span>
+                    </div>
+                    <span class="px-2.5 py-1 rounded font-bold uppercase ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">
+                        ${req.status}
+                    </span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Renderizar Painel da Empresa (KPIs)
+        function renderCompanyDashboard() {
+            const totalTickets = ticketsDatabase.length;
+            const gross = financialTransactions.reduce((acc, t) => acc + t.total_amount, 0);
+            const net = financialTransactions.reduce((acc, t) => acc + t.company_share_80, 0);
+
+            document.getElementById('company-kpi-sold').textContent = totalTickets;
+            document.getElementById('company-kpi-gross').textContent = `R$ ${gross.toFixed(2)}`;
+            document.getElementById('company-kpi-net').textContent = `R$ ${net.toFixed(2)}`;
+
+            const table = document.getElementById('company-events-table');
+            table.innerHTML = '';
+            eventsDatabase.forEach(evt => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-white">${evt.title}</td>
+                    <td class="p-3.5">${evt.category}</td>
+                    <td class="p-3.5">R$ ${evt.price.toFixed(2)}</td>
+                    <td class="p-3.5 font-bold ${evt.stock <= 0 ? 'text-rose-400' : 'text-slate-200'}">${evt.stock} un.</td>
+                    <td class="p-3.5 text-rose-400 font-semibold"><i class="fa-solid fa-heart mr-1"></i> ${evt.likes_count}</td>
+                `;
+                table.appendChild(tr);
+            });
+        }
+
+        // Renderizar Painel ADMIN (RN-05 & Cenário 3)
+        function renderAdminTables() {
+            const gmv = financialTransactions.reduce((acc, t) => acc + t.total_amount, 0);
+            const commission = financialTransactions.reduce((acc, t) => acc + t.platform_share_20, 0);
+
+            document.getElementById('admin-kpi-gmv').textContent = `R$ ${gmv.toFixed(2)}`;
+            document.getElementById('admin-kpi-commission').textContent = `R$ ${commission.toFixed(2)}`;
+            document.getElementById('admin-kpi-tickets').textContent = ticketsDatabase.length;
+
+            // Fila de Solicitações
+            const reqTable = document.getElementById('admin-requests-table');
+            document.getElementById('requests-count').textContent = `${companyRequests.filter(r => r.status === 'PENDENTE').length} pendente(s)`;
+            reqTable.innerHTML = '';
+
+            companyRequests.forEach(req => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-white">${req.company_name}</td>
+                    <td class="p-3.5 font-mono">${req.cnpj}</td>
+                    <td class="p-3.5">${req.email}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded font-bold ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">${req.status}</span></td>
+                    <td class="p-3.5 text-right space-x-2">
+                        ${req.status === 'PENDENTE' ? `
+                            <button onclick="approveCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400 transition">Aprovar & Promover</button>
+                            <button onclick="rejectCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30 transition">Rejeitar</button>
+                        ` : '<span class="text-slate-500">Concluído</span>'}
+                    </td>
+                `;
+                reqTable.appendChild(tr);
+            });
+
+            // Gestão de Usuários
+            const userTable = document.getElementById('admin-users-table');
+            userTable.innerHTML = '';
+            usersDatabase.forEach(usr => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-white">${usr.name}</td>
+                    <td class="p-3.5">${usr.email}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 bg-slate-700 text-brand-400 font-bold rounded">${usr.role}</span></td>
+                    <td class="p-3.5 text-right space-x-1">
+                        <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-[11px]">→ EMPRESA</button>
+                        <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-[11px]">→ ADMIN</button>
+                    </td>
+                `;
+                userTable.appendChild(tr);
+            });
+        }
+
+        // Aprovar Solicitação de Empresa (RN-05 & Cenário 3)
+        function approveCompanyRequest(reqId) {
+            const req = companyRequests.find(r => r.id === reqId);
+            if (req) {
+                req.status = 'APROVADO';
+                const user = usersDatabase.find(u => u.id === req.user_id);
+                if (user) {
+                    user.role = 'EMPRESA'; // Promover para EMPRESA (RN-05)
+                }
+                renderAdminTables();
+                renderUserRequests();
+                alert(`Cenário 3 Executado: Solicitação ${reqId} APROVADA! Papel do usuário alterado para EMPRESA.`);
+            }
+        }
+
+        function rejectCompanyRequest(reqId) {
+            const req = companyRequests.find(r => r.id === reqId);
+            if (req) {
+                req.status = 'REJEITADO';
+                renderAdminTables();
+                renderUserRequests();
+            }
+        }
+
+        function promoteUserRole(userId, newRole) {
+            const usr = usersDatabase.find(u => u.id === userId);
+            if (usr) {
+                usr.role = newRole;
+                renderAdminTables();
+                alert(`Papel do usuário ${usr.name} alterado para ${newRole}.`);
+            }
+        }
+
+        // Cadastrar Evento pela Empresa
         function createEvent(e) {
             e.preventDefault();
             const title = document.getElementById('new-title').value;
             const cat = document.getElementById('new-cat').value;
-            const price = document.getElementById('new-price').value;
-            const date = document.getElementById('new-date').value;
+            const price = parseFloat(document.getElementById('new-price').value);
+            const stock = parseInt(document.getElementById('new-stock').value);
 
             const newEvt = {
-                id: initialEvents.length + 1,
+                id: `evt-${Date.now()}`,
+                company_id: 'usr-2',
                 title: title,
                 category: cat,
-                price: parseFloat(price),
-                date: date,
-                location: 'Local a Definir',
+                price: price,
+                stock: stock,
+                likes_count: 0,
                 img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80'
             };
 
-            initialEvents.push(newEvt);
-            renderEvents(initialEvents);
+            eventsDatabase.push(newEvt);
+            renderEvents(eventsDatabase);
+            renderCompanyDashboard();
             closeModal('modal-novo-evento');
-            alert('Evento cadastrado e enviado para o painel de aprovação ADM com sucesso!');
+            alert('Evento publicado com sucesso!');
         }
 
-        // Salvar Perfil
         function saveProfile(e) {
             e.preventDefault();
             const newName = document.getElementById('input-name').value;
@@ -823,14 +1170,10 @@
 
             document.getElementById('profile-name').textContent = newName;
             document.getElementById('profile-email').textContent = newEmail;
-            
-            const initials = newName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-            document.getElementById('profile-avatar-initials').textContent = initials;
 
-            alert('Dados cadastrais atualizados com sucesso!');
+            alert('Dados do perfil atualizados com sucesso!');
         }
 
-        // Modais e Menu Mobile
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             document.getElementById(id).classList.add('flex');
@@ -842,8 +1185,7 @@
         }
 
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
     </script>
 </body>
