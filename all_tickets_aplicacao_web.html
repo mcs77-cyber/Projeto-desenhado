@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tickets - Gestão de Eventos e Ingressos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white relative">
+
+    <!-- BARRA DE SIMULAÇÃO RÁPIDA DE SESSÃO / PERMISSÕES (RBAC) -->
+    <div id="role-bar" class="bg-slate-950 border-b border-slate-800 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
+        <div class="flex items-center gap-2">
+            <span class="bg-brand-500/10 text-brand-500 px-2 py-0.5 rounded font-semibold border border-brand-500/20 flex items-center gap-1">
+                <i class="fa-solid fa-sliders"></i> Teste Rápido de Perfis
+            </span>
+            <span class="text-slate-400 hidden md:inline">Alterne instantaneamente o usuário autenticado:</span>
+        </div>
+        <div class="flex items-center gap-1 sm:gap-2">
+            <button onclick="switchQuickUser('deslogado')" id="btn-quick-deslogado" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user-slash mr-1"></i> Deslogado
+            </button>
+            <button onclick="switchQuickUser('usr-1')" id="btn-quick-usr-1" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user mr-1"></i> Lucas (Público)
+            </button>
+            <button onclick="switchQuickUser('usr-2')" id="btn-quick-usr-2" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-building mr-1"></i> Live Mkt (Empresa)
+            </button>
+            <button onclick="switchQuickUser('usr-3')" id="btn-quick-usr-3" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-shield-halved mr-1"></i> Admin
+            </button>
+        </div>
+    </div>
+
+    <!-- NAVBAR PRINCIPAL -->
+    <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo All Tickets -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-ticket text-slate-950 text-xl font-bold -rotate-12"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-tight text-white flex items-center gap-1">
+                            All<span class="text-brand-500">Tickets</span>
+                        </span>
+                        <span class="block text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Plataforma de Eventos</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-700/50 shadow-inner">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-white bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-store text-brand-500"></i>
+                        <span>FEED EVENTOS</span>
+                    </button>
+
+                    <!-- Área Logado (Público/Empresa/Admin) -->
+                    <div id="nav-group-user" class="flex items-center gap-1 px-1 border-l border-r border-slate-700/80 mx-1">
+                        <button onclick="navigateTo('conta')" id="nav-conta" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-regular fa-id-card text-brand-500"></i>
+                            <span>MINHA CONTA</span>
+                        </button>
+                        <button onclick="navigateTo('ingressos')" id="nav-ingressos" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-solid fa-wallet text-brand-500"></i>
+                            <span>CARTEIRA DIGITAL</span>
+                        </button>
+                    </div>
+
+                    <!-- Módulos Exclusivos (RBAC Strict: Painel Empresa visível apenas para EMPRESA, Painel ADM visível apenas para ADMIN) -->
+                    <div class="flex items-center gap-1">
+                        <button onclick="navigateTo('empresa')" id="nav-empresa" class="nav-btn hidden px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-solid fa-building-user text-sky-400"></i>
+                            <span>PAINEL EMPRESA</span>
+                        </button>
+                        <button onclick="navigateTo('adm')" id="nav-adm" class="nav-btn hidden px-4 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 transition flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>PAINEL ADM</span>
+                        </button>
+                    </div>
+
+                    <div id="auth-buttons-container" class="ml-1 pl-1 border-l border-slate-700/80">
+                        <!-- Injetado via JS de acordo com autenticação -->
+                    </div>
+                </div>
+
+                <!-- Botão Menu Mobile -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-store text-brand-500"></i> Feed de Eventos
+            </button>
+            <div id="mobile-user-links" class="space-y-2 pt-2 border-t border-slate-800">
+                <button onclick="navigateTo('conta'); toggleMobileMenu()" id="mob-conta" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                    <i class="fa-regular fa-id-card text-brand-500"></i> Minha Conta
+                </button>
+                <button onclick="navigateTo('ingressos'); toggleMobileMenu()" id="mob-ingressos" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital
+                </button>
+            </div>
+            <button onclick="navigateTo('empresa'); toggleMobileMenu()" id="mob-empresa" class="w-full hidden text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-building-user text-sky-400"></i> Painel Empresa
+            </button>
+            <button onclick="navigateTo('adm'); toggleMobileMenu()" id="mob-adm" class="w-full hidden text-left px-3 py-2 rounded-lg text-amber-400 hover:bg-amber-400/10 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> Painel ADMIN
+            </button>
+            <div id="mobile-auth-container" class="pt-2 border-t border-slate-800">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- BANNER DE STATUS DO USUÁRIO LOGADO -->
+        <div class="mb-6 p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-3">
+                <div id="current-user-badge-icon" class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Conta Conectada</div>
+                    <div id="current-user-title" class="text-base font-bold text-white">Visitante (Não autenticado)</div>
+                </div>
+            </div>
+            <div id="current-user-desc" class="text-xs text-slate-400 max-w-md">
+                Navegação restrita. Faça login ou cadastre-se para comprar ingressos e gerenciar seus dados.
+            </div>
+        </div>
+
+        <!-- ABA 1: FEED DE EVENTOS PÚBLICO -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 border border-slate-800 p-8 sm:p-12">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
+                        <i class="fa-solid fa-bolt mr-1"></i> All Tickets System
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
+                        Gestão Centralizada de Eventos e Ingressos Digitais.
+                    </h1>
+                    
+                    <!-- Barra de Pesquisa e Botão "Virar Empresa" (Visível apenas para perfil PUBLICO) -->
+                    <div class="pt-2 flex items-center gap-3 max-w-lg flex-wrap sm:flex-nowrap">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="event-search" onkeyup="filterEvents()" placeholder="Buscar atrações ou festivais..." class="w-full pl-11 pr-4 py-3 bg-slate-800/90 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                        </div>
+                        <button id="hero-virar-empresa-btn" onclick="openModal('modal-solicitar-vinculacao')" class="px-4 py-3 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 font-bold rounded-xl text-xs transition whitespace-nowrap flex items-center gap-2">
+                            <i class="fa-solid fa-building font-bold"></i> Virar Empresa
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-ticket text-[280px]"></i>
+                </div>
+            </div>
+
+            <!-- Categorias Oficiais do Sistema -->
+            <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+                <button onclick="filterCategory('todos')" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-brand-500/20">Todos os Eventos</button>
+                <button onclick="filterCategory('Shows e Festivais')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows e Festivais</button>
+                <button onclick="filterCategory('Teatro e Cultura')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro e Cultura</button>
+                <button onclick="filterCategory('Festas e Nightlife')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas e Nightlife</button>
+            </div>
+
+            <!-- Grid de Cards de Eventos -->
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sparkles text-amber-400"></i> Eventos Disponíveis
+                    </h2>
+                    <span class="text-xs text-slate-400" id="event-count">Exibindo eventos</span>
+                </div>
+                
+                <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards renderizados dinamicamente via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 2: MINHA CONTA DO USUÁRIO -->
+        <section id="tab-conta" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                    <i class="fa-regular fa-id-card text-brand-500"></i> Minha Conta
+                </h2>
+                <p class="text-sm text-slate-400">Gerencie seus dados pessoais e acompanhe suas preferências na plataforma.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Profile Card Unificado -->
+                <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
+                    <div class="text-center space-y-3">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-slate-700 border-4 border-brand-500/30 flex items-center justify-center text-4xl text-slate-300 font-bold relative">
+                            <span id="profile-avatar-initials">U</span>
+                            <span class="absolute bottom-0 right-0 w-6 h-6 bg-brand-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] text-slate-950">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <h3 id="profile-name" class="text-lg font-bold text-white">Usuário do Sistema</h3>
+                            <p id="profile-email" class="text-xs text-slate-400">usuario@email.com</p>
+                        </div>
+                        <span id="profile-badge" class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-bold uppercase">
+                            Papel: PUBLICO
+                        </span>
+                    </div>
+
+                    <div class="space-y-3 pt-4 border-t border-slate-700/60 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Status da Conta:</span>
+                            <span class="text-slate-200 font-medium">Ativa</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Ingressos Adquiridos:</span>
+                            <span class="text-brand-400 font-bold" id="profile-tickets-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form e Seção Dinâmica de Vinculação -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
+                        <h3 class="text-base font-bold text-white border-b border-slate-700/60 pb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-slate-400"></i> Informações Cadastrais
+                        </h3>
+
+                        <form onsubmit="saveProfile(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo / Razão Social</label>
+                                    <input type="text" id="input-name" value="" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
+                                    <input type="email" id="input-email" value="" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex justify-end">
+                                <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md shadow-brand-500/20">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Card de Solicitação de Parceria (Apenas visível se o papel for PUBLICO) -->
+                    <div id="partner-request-section" class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-building-circle-check text-sky-400"></i> Solicitação de Vinculação Empresarial
+                            </h3>
+                            <button onclick="openModal('modal-solicitar-vinculacao')" class="px-3 py-1.5 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold text-xs rounded-lg transition">
+                                Nova Proposta
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400">
+                            Submeta seus dados de CNPJ para transformar seu perfil de PUBLICO para EMPRESA e publicar seus próprios eventos na plataforma.
+                        </p>
+                        <div id="user-requests-list" class="space-y-2 pt-2">
+                            <!-- Injetado dinamicamente via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 3: CARTEIRA DIGITAL DE INGRESSOS -->
+        <section id="tab-ingressos" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital de Ingressos
+                    </h2>
+                    <p class="text-sm text-slate-400">Seus bilhetes com códigos únicos para apresentação na portaria.</p>
+                </div>
+            </div>
+
+            <div id="tickets-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Ingressos em carteira renderizados via JS -->
+            </div>
+        </section>
+
+        <!-- ABA 4: PAINEL DA EMPRESA / PRODUTOR -->
+        <section id="tab-empresa" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-building-user text-sky-400"></i> Painel do Produtor
+                    </h2>
+                    <p class="text-sm text-slate-400">Acompanhe vendas, publique atrações e valide entradas de participantes.</p>
+                </div>
+                <button onclick="openModal('modal-novo-evento')" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-sky-500/20">
+                    <i class="fa-solid fa-plus"></i> Cadastrar Evento
+                </button>
+            </div>
+
+            <!-- KPIs da Empresa -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Ingressos Vendidos</span>
+                    <div class="text-2xl font-black text-white mt-1" id="company-kpi-sold">0</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Receita Bruta Total</span>
+                    <div class="text-2xl font-black text-slate-300 mt-1" id="company-kpi-gross">R$ 0,00</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60 border-l-4 border-l-brand-500">
+                    <span class="text-xs text-brand-400 font-bold uppercase tracking-wider">Saldo Líquido a Receber (80%)</span>
+                    <div class="text-2xl font-black text-brand-400 mt-1" id="company-kpi-net">R$ 0,00</div>
+                </div>
+            </div>
+
+            <!-- MÓDULO VALIDADOR DE PORTARIA (POR CÓDIGO DIGITADO) -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4 shadow-xl">
+                <div class="flex items-center gap-3 border-b border-slate-700/60 pb-3">
+                    <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Módulo Validador de Portaria</h3>
+                        <p class="text-xs text-slate-400">Valide e queime o ingresso do participante inserindo o código do bilhete</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-ticket absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="input-gate-hash" placeholder="Insira o código do ingresso (ex: QR-A9F82B10C4)..." class="w-full pl-11 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-400 outline-none text-sm font-mono uppercase">
+                    </div>
+                    <button onclick="validateTicketGate()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-double"></i> Validar Código
+                    </button>
+                </div>
+
+                <div id="gate-result-box" class="hidden p-4 rounded-xl border text-sm font-medium"></div>
+            </div>
+
+            <!-- Tabela de Eventos Cadastrados pela Empresa -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white">
+                    <span>Atrações Cadastradas</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Título</th>
+                                <th class="p-3.5">Categoria</th>
+                                <th class="p-3.5">Preço Unitário</th>
+                                <th class="p-3.5">Estoque</th>
+                                <th class="p-3.5">Curtidas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="company-events-table" class="divide-y divide-slate-700/40">
+                            <!-- Linhas renderizadas via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 5: PAINEL ADMINISTRATIVO (/admin) -->
+        <section id="tab-adm" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-user-shield text-amber-400"></i> Painel Administrativo Geral (ADMIN)
+                </h2>
+                <p class="text-sm text-slate-400">Métricas globais da All Tickets, diretório gerencial de empresas parceiras, gestão de papéis e auditoria de solicitações.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Volume Total Transacionado (GMV)</span>
+                    <div class="text-2xl font-black text-white mt-1" id="admin-kpi-gmv">R$ 0,00</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60 border-l-4 border-l-amber-400">
+                    <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Comissão Retida All Tickets (20%)</span>
+                    <div class="text-2xl font-black text-amber-400 mt-1" id="admin-kpi-commission">R$ 0,00</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Total de Ingressos Emitidos</span>
+                    <div class="text-2xl font-black text-sky-400 mt-1" id="admin-kpi-tickets">0</div>
+                </div>
+            </div>
+
+            <!-- NOVA SEÇÃO: DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS (ADMIN VISION) -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-building text-sky-400"></i> Diretório de Empresas Cadastradas & Performance
+                    </span>
+                    <span class="text-xs text-slate-400" id="admin-companies-count">0 empresa(s)</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Razão Social / Nome</th>
+                                <th class="p-3.5">E-mail de Contato</th>
+                                <th class="p-3.5 text-center">Atrações</th>
+                                <th class="p-3.5 text-center">Vendidos</th>
+                                <th class="p-3.5">Faturamento Bruto</th>
+                                <th class="p-3.5 text-amber-400">Comissão (20%)</th>
+                                <th class="p-3.5 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-companies-table" class="divide-y divide-slate-700/40">
+                            <!-- Renderizado via JS com dados gerenciais das empresas -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fila de Auditoria de Solicitações de Vinculação -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden space-y-2">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-amber-400"></i> Fila de Auditoria: Solicitações de Vinculação
+                    </span>
+                    <span class="text-xs text-slate-400" id="requests-count">0 pendente(s)</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Empresa / Solicitante</th>
+                                <th class="p-3.5">CNPJ</th>
+                                <th class="p-3.5">E-mail</th>
+                                <th class="p-3.5">Status</th>
+                                <th class="p-3.5 text-right">Ações de Aprovação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-requests-table" class="divide-y divide-slate-700/40">
+                            <!-- Renderizado via JS (sem itens fictícios pré-carregados) -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabela de Gestão de Usuários e Alteração Dinâmica de Papéis -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-users text-sky-400"></i> Gestão de Usuários e Promoção / Rebaixamento de Papéis
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Nome</th>
+                                <th class="p-3.5">E-mail</th>
+                                <th class="p-3.5">Papel Atual</th>
+                                <th class="p-3.5 text-right">Ações de Promoção / Rebaixamento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table" class="divide-y divide-slate-700/40">
+                            <!-- Renderizado dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: LOGIN DE USUÁRIOS -->
+    <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="closeModal('modal-login')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="space-y-1">
+                <span class="text-xs font-extrabold text-brand-500 uppercase tracking-wider">Acesso ao Sistema</span>
+                <h3 class="text-xl font-bold text-white">Entrar na sua Conta</h3>
+            </div>
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">E-mail Cadastrado</label>
+                    <input type="email" id="login-email" required placeholder="seu@email.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Senha</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20">
+                    Entrar na Conta
+                </button>
+            </form>
+
+            <div class="pt-3 border-t border-slate-800 text-center space-y-2">
+                <p class="text-xs text-slate-400">Não tem uma conta cadastrada?</p>
+                <button onclick="switchToRegisterModal()" class="text-xs font-bold text-brand-400 hover:underline">
+                    Criar nova conta gratuitamente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CADASTRO DE NOVOS USUÁRIOS -->
+    <div id="modal-cadastro" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="closeModal('modal-cadastro')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="space-y-1">
+                <span class="text-xs font-extrabold text-brand-500 uppercase tracking-wider">Novo Registro</span>
+                <h3 class="text-xl font-bold text-white">Criar Conta no All Tickets</h3>
+            </div>
+
+            <form onsubmit="handleRegisterSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Nome Completo ou Nome Fantasia</label>
+                    <input type="text" id="reg-name" required placeholder="Ex: Maria Santos" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">E-mail</label>
+                    <input type="email" id="reg-email" required placeholder="seu.email@dominio.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Senha</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Tipo de Conta</label>
+                    <div class="w-full bg-slate-800/80 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-brand-400 font-semibold flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-user-check text-brand-500"></i> Cliente / Comprador (Público)</span>
+                        <span class="text-[10px] bg-brand-500/10 border border-brand-500/20 text-brand-400 px-2 py-0.5 rounded font-bold uppercase">Padrão</span>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20">
+                    Cadastrar e Entrar
+                </button>
+            </form>
+
+            <div class="pt-3 border-t border-slate-800 text-center">
+                <button onclick="switchToLoginModal()" class="text-xs font-bold text-slate-400 hover:text-white">
+                    Já tem uma conta? Faça Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CHECKOUT DE COMPRA DE INGRESSO -->
+    <div id="modal-comprar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="closeModal('modal-comprar')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div>
+                <span class="text-[10px] font-extrabold text-brand-500 uppercase tracking-widest bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">Checkout Seguro</span>
+                <h3 id="modal-event-title" class="text-xl font-extrabold text-white mt-1">Nome do Evento</h3>
+                <p id="modal-event-stock" class="text-xs font-semibold text-slate-400">Estoque restante: -</p>
+            </div>
+            
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-800 pb-1">Resumo da Transação</span>
+                <div class="flex justify-between text-slate-300">
+                    <span>Preço do Ingresso:</span>
+                    <span id="split-unit-price" class="font-bold text-white">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Repasse Produtor (80%):</span>
+                    <span id="split-company-share" class="font-semibold text-slate-300">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Taxa All Tickets (20%):</span>
+                    <span id="split-platform-share" class="font-semibold text-amber-400">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Método de Pagamento</label>
+                    <select id="modal-payment-method" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                        <option value="PIX Instantâneo">PIX Instantâneo</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="executePurchase()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-lock"></i> Confirmar Compra
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: TELA DE COMPRA FINALIZADA -->
+    <div id="modal-compra-sucesso" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-brand-500/40 rounded-3xl max-w-md w-full p-6 text-center space-y-5 shadow-2xl relative">
+            <button onclick="closeModal('modal-compra-sucesso')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="w-16 h-16 bg-brand-500/20 border-2 border-brand-500 rounded-full flex items-center justify-center mx-auto text-brand-400 text-3xl shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="space-y-1">
+                <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">Pedido Confirmado</span>
+                <h3 class="text-2xl font-black text-white">Compra Finalizada com Sucesso!</h3>
+                <p class="text-xs text-slate-400">Seu ingresso já está registrado e disponível na sua carteira digital.</p>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-left text-xs">
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Atração:</span>
+                    <strong id="success-event-title" class="text-white font-bold">Nome do Evento</strong>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Código do Ingresso:</span>
+                    <strong id="success-ticket-code" class="text-brand-400 font-mono font-bold select-all">QR-XXXXXX</strong>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Valor Pago:</span>
+                    <strong id="success-event-price" class="text-white font-bold">R$ 0,00</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Status do Bilhete:</span>
+                    <span class="text-emerald-400 font-extrabold uppercase">Ativo / Válido</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button onclick="closeModal('modal-compra-sucesso'); navigateTo('ingressos')" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition shadow-md shadow-brand-500/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wallet"></i> Ver na Carteira Digital
+                </button>
+                <button onclick="closeModal('modal-compra-sucesso')" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition">
+                    Continuar Navegando
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: SOLICITAR VINCULAÇÃO EMPRESARIAL -->
+    <div id="modal-solicitar-vinculacao" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-solicitar-vinculacao')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-building text-sky-400"></i> Solicitar Vinculação de Empresa
+            </h3>
+            <p class="text-xs text-slate-400">Submeta a proposta da sua empresa para aprovação da equipe administrativa.</p>
+            <form onsubmit="submitCompanyBindingRequest(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Nome Fantasia / Razão Social</label>
+                    <input type="text" id="req-company-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">CNPJ</label>
+                    <input type="text" id="req-cnpj" required placeholder="00.000.000/0001-00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">E-mail Comercial</label>
+                    <input type="email" id="req-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Proposta da Produtora</label>
+                    <textarea id="req-desc" required rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
+                    Enviar Solicitação
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 6: CADASTRAR NOVO EVENTO -->
+    <div id="modal-novo-evento" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-novo-evento')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-calendar-plus text-sky-400"></i> Cadastrar Novo Evento
+            </h3>
+            <form id="form-create-event" onsubmit="createEvent(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Título da Atração</label>
+                    <input type="text" id="new-title" required placeholder="Ex: Festival de Verão 2026" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Categoria</label>
+                        <select id="new-cat" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                            <option value="Shows e Festivais">Shows e Festivais</option>
+                            <option value="Teatro e Cultura">Teatro e Cultura</option>
+                            <option value="Festas e Nightlife">Festas e Nightlife</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Preço (R$)</label>
+                        <input type="number" step="0.01" id="new-price" required placeholder="100.00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Estoque</label>
+                        <input type="number" id="new-stock" required min="1" value="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Publicar Evento Instantaneamente
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 7: NOTIFICAÇÃO / AVISO ESTILIZADO -->
+    <div id="modal-custom-notice" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-custom-notice')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div id="notice-icon-container" class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="space-y-1">
+                <h3 id="notice-title" class="text-lg font-bold text-white">Atenção</h3>
+                <p id="notice-message" class="text-xs text-slate-300 leading-relaxed">Mensagem de aviso aqui.</p>
+            </div>
+
+            <div id="notice-action-buttons" class="pt-2">
+                <button onclick="closeModal('modal-custom-notice')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTAINER DE TOASTS FLUTUANTES -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT PRINCIPAL -->
+    <script>
+        // Banco de dados central em memória
+        const usersDatabase = [
+            { id: 'usr-1', name: 'Lucas Silva', email: 'lucas.silva@email.com', password: '123', role: 'PUBLICO', initials: 'LS' },
+            { id: 'usr-2', name: 'Live Marketing Produções', email: 'contato@livemarketing.com.br', password: '123', role: 'EMPRESA', initials: 'LM' },
+            { id: 'usr-3', name: 'Suporte All Tickets', email: 'admin@alltickets.com.br', password: '123', role: 'ADMIN', initials: 'AT' }
+        ];
+
+        let currentUser = null; // null = Deslogado
+
+        // Fila de solicitações de vinculação zerada (sem solicitações fictícias)
+        const companyRequests = [];
+
+        const eventsDatabase = [
+            { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
+            { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
+            { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+        ];
+
+        const ticketsDatabase = [
+            { id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', user_id: 'usr-1', event_id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', event_title: 'Maceió Summer Sounds 2026', price: 100.00, qr_hash: 'QR-A9F82B10C4', is_used: false, created_at: '2026-09-17T09:10:00Z' }
+        ];
+
+        const financialTransactions = [
+            { id: 'fin-1', ticket_id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', company_id: 'usr-2', total_amount: 100.00, company_share_80: 80.00, platform_share_20: 20.00 }
+        ];
+
+        let selectedEventForPurchase = null;
+
+        // Inicialização do App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEvents(eventsDatabase);
+            updateAuthState();
+            navigateTo('home');
+        });
+
+        // Alternar Sessão Rapidamente via Simulador Superior
+        function switchQuickUser(userId) {
+            if (userId === 'deslogado') {
+                currentUser = null;
+            } else {
+                currentUser = usersDatabase.find(u => u.id === userId) || null;
+            }
+            
+            // REDIRECIONAMENTO OBRIGATÓRIO PARA A TELA INICIAL (FEED)
+            navigateTo('home');
+            updateAuthState();
+            showToast(currentUser ? `Autenticado como ${currentUser.name} [${currentUser.role}]` : 'Sessão encerrada. Bem-vindo!');
+        }
+
+        // Atualizar Estado de Autenticação e Regras de Visibilidade RBAC
+        function updateAuthState() {
+            const authContainer = document.getElementById('auth-buttons-container');
+            const mobAuthContainer = document.getElementById('mobile-auth-container');
+
+            const currentRole = currentUser ? currentUser.role : 'DESLOGADO';
+
+            // Destaque do Usuário na Barra Superior
+            ['deslogado', 'usr-1', 'usr-2', 'usr-3'].forEach(id => {
+                const btn = document.getElementById(`btn-quick-${id}`);
+                if (btn) {
+                    const isSelected = (id === 'deslogado' && !currentUser) || (currentUser && currentUser.id === id);
+                    btn.className = isSelected 
+                        ? 'px-2.5 py-1 rounded text-white bg-brand-600 font-bold' 
+                        : 'px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium';
+                }
+            });
+
+            // Banner Informativo Superior
+            const userTitle = document.getElementById('current-user-title');
+            const userDesc = document.getElementById('current-user-desc');
+
+            if (!currentUser) {
+                userTitle.textContent = 'Visitante (Deslogado)';
+                userDesc.textContent = 'Navegação restrita. Entre na sua conta para adquirir ingressos ou gerenciar módulos empresariais.';
+
+                authContainer.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <button onclick="openModal('modal-login')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition">
+                            Entrar
+                        </button>
+                        <button onclick="openModal('modal-cadastro')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition shadow-md shadow-brand-500/10">
+                            Cadastrar
+                        </button>
+                    </div>
+                `;
+                mobAuthContainer.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="openModal('modal-login'); toggleMobileMenu()" class="py-2 bg-slate-800 text-white font-bold rounded-lg text-center text-xs">
+                            Entrar
+                        </button>
+                        <button onclick="openModal('modal-cadastro'); toggleMobileMenu()" class="py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-xs">
+                            Cadastrar
+                        </button>
+                    </div>
+                `;
+            } else {
+                userTitle.textContent = `${currentUser.name} (${currentUser.email})`;
+                userDesc.textContent = `Sessão ativa como [${currentUser.role}]. Permissões atualizadas em tempo real.`;
+
+                authContainer.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-brand-400 font-bold hidden sm:inline px-2.5 py-1 bg-brand-500/10 rounded-lg border border-brand-500/20">
+                            ${currentUser.name}
+                        </span>
+                        <button onclick="logout()" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sair
+                        </button>
+                    </div>
+                `;
+                mobAuthContainer.innerHTML = `
+                    <button onclick="logout(); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-xs">
+                        Sair da Conta (${currentUser.name})
+                    </button>
+                `;
+            }
+
+            // REGRAS RIGOROSAS DE EXIBIÇÃO NO MENU SUPERIOR (RBAC STRICT)
+            const navGroupUser = document.getElementById('nav-group-user');
+            const navEmpresa = document.getElementById('nav-empresa');
+            const navAdm = document.getElementById('nav-adm');
+            const mobEmpresa = document.getElementById('mob-empresa');
+            const mobAdm = document.getElementById('mob-adm');
+            const heroVirarEmpresaBtn = document.getElementById('hero-virar-empresa-btn');
+            const partnerRequestSection = document.getElementById('partner-request-section');
+
+            if (!currentUser) {
+                navGroupUser.classList.add('opacity-40');
+                navEmpresa.classList.add('hidden');
+                navAdm.classList.add('hidden');
+                mobEmpresa.classList.add('hidden');
+                mobAdm.classList.add('hidden');
+                heroVirarEmpresaBtn.classList.remove('hidden');
+                partnerRequestSection.classList.remove('hidden');
+            } else {
+                navGroupUser.classList.remove('opacity-40');
+
+                // Módulo Empresa: Apenas visível para perfil EMPRESA (Oculto para ADMIN)
+                if (currentRole === 'EMPRESA') {
+                    navEmpresa.classList.remove('hidden');
+                    mobEmpresa.classList.remove('hidden');
+                    heroVirarEmpresaBtn.classList.add('hidden');
+                    partnerRequestSection.classList.add('hidden');
+                } else {
+                    navEmpresa.classList.add('hidden');
+                    mobEmpresa.classList.add('hidden');
+                    if (currentRole === 'PUBLICO') {
+                        heroVirarEmpresaBtn.classList.remove('hidden');
+                        partnerRequestSection.classList.remove('hidden');
+                    } else { // ADMIN
+                        heroVirarEmpresaBtn.classList.add('hidden');
+                        partnerRequestSection.classList.add('hidden');
+                    }
+                }
+
+                // Módulo Admin: Visível exclusivamente para perfil ADMIN
+                if (currentRole === 'ADMIN') {
+                    navAdm.classList.remove('hidden');
+                    mobAdm.classList.remove('hidden');
+                } else {
+                    navAdm.classList.add('hidden');
+                    mobAdm.classList.add('hidden');
+                }
+            }
+
+            // Atualização de dados nas abas ativas
+            renderProfileData();
+            renderMyTickets();
+            renderCompanyDashboard();
+            renderAdminTables();
+            renderUserRequests();
+        }
+
+        // Navegação de Abas
+        function navigateTo(tabName) {
+            // Verificação de Acesso
+            if (!currentUser && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
+                showNoticeModal('Login Necessário', 'Você precisa estar logado na sua conta para acessar esta área.', 'lock', [
+                    { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
+                    { label: 'Cancelar', primary: false, action: () => {} }
+                ]);
+                return;
+            }
+
+            if (currentUser) {
+                if (tabName === 'empresa' && currentUser.role !== 'EMPRESA') {
+                    showNoticeModal('Acesso Restrito', 'O Painel Empresa é exclusivo para organizadores cadastrados.');
+                    return;
+                }
+                if (tabName === 'adm' && currentUser.role !== 'ADMIN') {
+                    showNoticeModal('Acesso Negado', 'Apenas usuários administradores podem acessar o Painel ADM.');
+                    return;
+                }
+            }
+
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const target = document.getElementById(`tab-${tabName}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('text-slate-300');
+            });
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-white');
+            }
+        }
+
+        // Renderizar Perfil Minha Conta
+        function renderProfileData() {
+            if (!currentUser) return;
+
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-badge').textContent = `Papel: ${currentUser.role}`;
+            document.getElementById('profile-avatar-initials').textContent = currentUser.initials || 'U';
+
+            document.getElementById('input-name').value = currentUser.name;
+            document.getElementById('input-email').value = currentUser.email;
+        }
+
+        // Renderizar Feed de Eventos
+        function renderEvents(events) {
+            const grid = document.getElementById('events-grid');
+            document.getElementById('event-count').textContent = `Exibindo ${events.length} evento(s)`;
+            grid.innerHTML = '';
+
+            events.forEach(evt => {
+                const companyOwner = usersDatabase.find(u => u.id === evt.company_id);
+                const companyName = companyOwner ? companyOwner.name : 'Produtora Parceira';
+                const isOutOfStock = evt.stock <= 0;
+
+                const card = document.createElement('div');
+                card.className = 'bg-slate-800/60 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-slate-600 transition';
+                card.innerHTML = `
+                    <div>
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="${evt.img}" alt="${evt.title}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 px-3 py-1 bg-slate-950/80 backdrop-blur-md text-brand-400 border border-brand-500/30 rounded-full text-[10px] font-bold uppercase">
+                                R$ ${evt.price.toFixed(2)}
+                            </span>
+                            <span class="absolute top-3 left-3 px-2.5 py-1 ${isOutOfStock ? 'bg-rose-500/90' : 'bg-slate-900/80'} text-white rounded-lg text-[10px] font-bold">
+                                ${isOutOfStock ? 'Esgotado' : `Estoque: ${evt.stock}`}
+                            </span>
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <span class="text-[10px] uppercase font-extrabold tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">${evt.category}</span>
+                            <h3 class="font-bold text-white text-base leading-snug">${evt.title}</h3>
+                            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                                <button onclick="likeEvent('${evt.id}')" class="flex items-center gap-1.5 text-rose-400 hover:text-rose-300 font-semibold bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 transition">
+                                    <i class="fa-solid fa-heart"></i> ${evt.likes_count} Curtidas
+                                </button>
+                                <span class="truncate max-w-[150px]" title="${companyName}"><i class="fa-solid fa-building text-slate-500 mr-1"></i> ${companyName}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0">
+                        <button onclick="openBuyModal('${evt.id}')" ${isOutOfStock ? 'disabled' : ''} class="w-full py-2.5 ${isOutOfStock ? 'bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-brand-500 hover:bg-brand-600 text-slate-950'} font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md shadow-brand-500/10">
+                            <i class="fa-solid fa-ticket"></i> ${isOutOfStock ? 'Ingressos Esgotados' : 'Comprar Ingresso'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function likeEvent(evtId) {
+            const evt = eventsDatabase.find(e => e.id === evtId);
+            if (evt) {
+                evt.likes_count += 1;
+                renderEvents(eventsDatabase);
+                renderCompanyDashboard();
+                renderAdminTables();
+            }
+        }
+
+        function filterEvents() {
+            const query = document.getElementById('event-search').value.toLowerCase();
+            const filtered = eventsDatabase.filter(e => e.title.toLowerCase().includes(query));
+            renderEvents(filtered);
+        }
+
+        function filterCategory(cat) {
+            if (cat === 'todos') {
+                renderEvents(eventsDatabase);
+            } else {
+                const filtered = eventsDatabase.filter(e => e.category === cat);
+                renderEvents(filtered);
+            }
+        }
+
+        // Abrir Checkout de Compra
+        function openBuyModal(eventId) {
+            if (!currentUser) {
+                showNoticeModal('Login Necessário', 'Para adquirir ingressos você precisa estar autenticado.', 'lock', [
+                    { label: 'Fazer Login', primary: true, action: () => openModal('modal-login') },
+                    { label: 'Cancelar', primary: false, action: () => {} }
+                ]);
+                return;
+            }
+
+            selectedEventForPurchase = eventsDatabase.find(e => e.id === eventId);
+            
+            if (selectedEventForPurchase.stock <= 0) {
+                showNoticeModal('Estoque Esgotado', 'Desculpe, os ingressos para este evento já terminaram.');
+                return;
+            }
+
+            const total = selectedEventForPurchase.price;
+            const companyShare = total * 0.80;
+            const platformShare = total * 0.20;
+
+            document.getElementById('modal-event-title').textContent = selectedEventForPurchase.title;
+            document.getElementById('modal-event-stock').textContent = `Estoque disponível: ${selectedEventForPurchase.stock} unidades`;
+            document.getElementById('split-unit-price').textContent = `R$ ${total.toFixed(2)}`;
+            document.getElementById('split-company-share').textContent = `R$ ${companyShare.toFixed(2)}`;
+            document.getElementById('split-platform-share').textContent = `R$ ${platformShare.toFixed(2)}`;
+
+            openModal('modal-comprar');
+        }
+
+        // Executar Compra
+        function executePurchase() {
+            if (!selectedEventForPurchase) return;
+
+            if (selectedEventForPurchase.stock <= 0) {
+                showNoticeModal('Estoque Esgotado', 'Estoque indisponível no momento da confirmação.');
+                closeModal('modal-comprar');
+                return;
+            }
+
+            // Decrementar estoque
+            selectedEventForPurchase.stock -= 1;
+
+            const ticketCode = 'QR-' + Math.random().toString(16).substring(2, 10).toUpperCase();
+            const total = selectedEventForPurchase.price;
+
+            const newTicket = {
+                id: `tkt-${Date.now()}`,
+                user_id: currentUser.id,
+                event_id: selectedEventForPurchase.id,
+                event_title: selectedEventForPurchase.title,
+                price: total,
+                qr_hash: ticketCode,
+                is_used: false,
+                created_at: new Date().toISOString()
+            };
+
+            const newTransaction = {
+                id: `fin-${Date.now()}`,
+                ticket_id: newTicket.id,
+                company_id: selectedEventForPurchase.company_id,
+                total_amount: total,
+                company_share_80: total * 0.80,
+                platform_share_20: total * 0.20
+            };
+
+            ticketsDatabase.push(newTicket);
+            financialTransactions.push(newTransaction);
+
+            renderEvents(eventsDatabase);
+            renderMyTickets();
+            renderCompanyDashboard();
+            renderAdminTables();
+
+            closeModal('modal-comprar');
+
+            document.getElementById('success-event-title').textContent = selectedEventForPurchase.title;
+            document.getElementById('success-ticket-code').textContent = ticketCode;
+            document.getElementById('success-event-price').textContent = `R$ ${total.toFixed(2)}`;
+            
+            openModal('modal-compra-sucesso');
+        }
+
+        // Renderizar Ingressos Comprados
+        function renderMyTickets() {
+            const container = document.getElementById('tickets-container');
+            const myTickets = currentUser ? ticketsDatabase.filter(t => t.user_id === currentUser.id) : [];
+            
+            document.getElementById('profile-tickets-count').textContent = myTickets.length;
+            container.innerHTML = '';
+
+            if (myTickets.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-2 text-center py-8 bg-slate-800/30 border border-slate-700/50 rounded-2xl space-y-2">
+                        <i class="fa-solid fa-ticket text-3xl text-slate-500"></i>
+                        <p class="text-slate-400 text-sm font-medium">Sua carteira digital de ingressos está vazia.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            myTickets.forEach(ticket => {
+                const item = document.createElement('div');
+                item.className = `bg-slate-800/60 border ${ticket.is_used ? 'border-rose-500/40 bg-rose-950/10' : 'border-slate-700/60'} p-5 rounded-2xl flex items-center justify-between gap-4`;
+                item.innerHTML = `
+                    <div class="space-y-1">
+                        <span class="text-[11px] font-mono font-extrabold ${ticket.is_used ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' : 'text-brand-500 bg-brand-500/10 border-brand-500/20'} px-2.5 py-1 rounded border">${ticket.qr_hash}</span>
+                        <h4 class="font-bold text-white text-sm pt-1">${ticket.event_title}</h4>
+                        <p class="text-xs text-slate-400">Status: <strong class="${ticket.is_used ? 'text-rose-400' : 'text-brand-400'}">${ticket.is_used ? 'UTILIZADO (NA PORTARIA)' : 'ATIVO (VÁLIDO)'}</strong></p>
+                    </div>
+                    <button onclick="copyToClipboard('${ticket.qr_hash}')" class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs rounded-xl flex items-center gap-2 transition whitespace-nowrap">
+                        <i class="fa-regular fa-copy text-brand-400"></i> Copiar Código
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast(`Código ${text} copiado para a área de transferência!`);
+        }
+
+        // Validar Portaria por Código
+        function validateTicketGate() {
+            const inputCode = document.getElementById('input-gate-hash').value.trim().toUpperCase();
+            const resultBox = document.getElementById('gate-result-box');
+            resultBox.className = 'hidden p-4 rounded-xl border text-sm font-medium';
+
+            if (!inputCode) {
+                showNoticeModal('Aviso', 'Informe um código de ingresso para validação.');
+                return;
+            }
+
+            const ticket = ticketsDatabase.find(t => t.qr_hash === inputCode);
+
+            if (!ticket) {
+                resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-amber-500/20 border-amber-500/40 text-amber-300';
+                resultBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <strong>Código Inexistente:</strong> O bilhete "${inputCode}" não foi encontrado no banco de dados.`;
+                resultBox.classList.remove('hidden');
+                return;
+            }
+
+            if (ticket.is_used) {
+                resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-rose-500/20 border-rose-500/40 text-rose-300';
+                resultBox.innerHTML = `<i class="fa-solid fa-ban mr-2"></i> <strong>ALERTA DE SEGURANÇA:</strong> Ingresso já utilizado anteriormente na portaria! Entrada Recusada.`;
+                resultBox.classList.remove('hidden');
+                return;
+            }
+
+            ticket.is_used = true;
+            resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-emerald-500/20 border-emerald-500/40 text-emerald-300';
+            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>Acesso Liberado:</strong> Bilhete "${ticket.event_title}" validado e queimado com sucesso!`;
+            resultBox.classList.remove('hidden');
+
+            renderMyTickets();
+        }
+
+        // Criar Novo Evento (Empresa)
+        function createEvent(e) {
+            e.preventDefault();
+
+            if (!currentUser || currentUser.role !== 'EMPRESA') {
+                showNoticeModal('Acesso Negado', 'Somente contas do tipo Empresa podem publicar novos eventos.');
+                return;
+            }
+
+            const title = document.getElementById('new-title').value.trim();
+            const cat = document.getElementById('new-cat').value;
+            const price = parseFloat(document.getElementById('new-price').value);
+            const stock = parseInt(document.getElementById('new-stock').value);
+
+            if (!title || isNaN(price) || isNaN(stock)) {
+                showNoticeModal('Dados Inválidos', 'Preencha todos os campos do evento corretamente.');
+                return;
+            }
+
+            const newEvt = {
+                id: `evt-${Date.now()}`,
+                company_id: currentUser.id,
+                title: title,
+                category: cat,
+                price: price,
+                stock: stock,
+                likes_count: 0,
+                img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80'
+            };
+
+            eventsDatabase.unshift(newEvt);
+
+            renderEvents(eventsDatabase);
+            renderCompanyDashboard();
+            renderAdminTables();
+
+            document.getElementById('form-create-event').reset();
+            closeModal('modal-novo-evento');
+
+            showNoticeModal('Atração Publicada!', `O evento "${title}" foi publicado com sucesso e já está disponível no Feed Principal.`, 'check');
+        }
+
+        // Login
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            const user = usersDatabase.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                closeModal('modal-login');
+                navigateTo('home');
+                updateAuthState();
+                showToast(`Bem-vindo de volta, ${user.name}!`);
+            } else {
+                showNoticeModal('Falha na Autenticação', 'E-mail ou senha incorretos. Tente novamente.');
+            }
+        }
+
+        // Registro (Forçado para PUBLICO)
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const role = 'PUBLICO';
+
+            if (usersDatabase.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showNoticeModal('E-mail Já Cadastrado', 'Este e-mail já está sendo utilizado por outra conta.');
+                return;
+            }
+
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+
+            const newUser = {
+                id: `usr-${Date.now()}`,
+                name: name,
+                email: email,
+                password: password,
+                role: role,
+                initials: initials
+            };
+
+            usersDatabase.push(newUser);
+            currentUser = newUser;
+
+            closeModal('modal-cadastro');
+            navigateTo('home');
+            updateAuthState();
+            showNoticeModal('Conta Criada!', `Sua conta [PUBLICO] foi registrada com sucesso!`, 'check');
+        }
+
+        function logout() {
+            currentUser = null;
+            navigateTo('home');
+            updateAuthState();
+            showToast('Você saiu da sua conta.');
+        }
+
+        // Submeter Solicitação de Vinculação Empresarial
+        function submitCompanyBindingRequest(e) {
+            e.preventDefault();
+            const name = document.getElementById('req-company-name').value;
+            const cnpj = document.getElementById('req-cnpj').value;
+            const email = document.getElementById('req-email').value;
+            const desc = document.getElementById('req-desc').value;
+
+            const newReq = {
+                id: `REQ-${Math.floor(100 + Math.random() * 900)}`,
+                company_name: name,
+                cnpj: cnpj,
+                email: email,
+                description: desc,
+                status: 'PENDENTE',
+                user_id: currentUser ? currentUser.id : 'usr-1'
+            };
+
+            companyRequests.push(newReq);
+            renderUserRequests();
+            renderAdminTables();
+            closeModal('modal-solicitar-vinculacao');
+            showNoticeModal('Proposta Enviada', 'Sua solicitação foi registrada na fila de auditoria administrativa.');
+        }
+
+        function renderUserRequests() {
+            const list = document.getElementById('user-requests-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            const userReqs = currentUser 
+                ? companyRequests.filter(r => r.user_id === currentUser.id || (r.email && r.email.toLowerCase() === currentUser.email.toLowerCase()))
+                : [];
+
+            if (userReqs.length === 0) {
+                list.innerHTML = `
+                    <div class="p-4 text-center text-xs text-slate-400 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-1">
+                        <i class="fa-solid fa-inbox text-slate-500 text-lg block mb-1"></i>
+                        <p class="font-medium text-slate-300">Nenhuma solicitação submetida até o momento.</p>
+                        <p class="text-[11px] text-slate-500">Clique em "Nova Proposta" para enviar os dados da sua empresa para análise.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            userReqs.forEach(req => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-slate-900 border border-slate-700/60 rounded-xl flex items-center justify-between text-xs';
+                item.innerHTML = `
+                    <div>
+                        <strong class="text-white block">${req.company_name} (${req.cnpj})</strong>
+                        <span class="text-slate-400">${req.description}</span>
+                    </div>
+                    <span class="px-2.5 py-1 rounded font-bold uppercase ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">
+                        ${req.status}
+                    </span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Renderizar Painel da Empresa Individual
+        function renderCompanyDashboard() {
+            if (!currentUser || currentUser.role !== 'EMPRESA') return;
+
+            // Filtrar eventos da empresa atual
+            const companyEvents = eventsDatabase.filter(e => e.company_id === currentUser.id);
+            const companyEventIds = companyEvents.map(e => e.id);
+            
+            const companyTickets = ticketsDatabase.filter(t => companyEventIds.includes(t.event_id));
+            const companyTxs = financialTransactions.filter(f => companyTickets.some(t => t.id === f.ticket_id) || f.company_id === currentUser.id);
+
+            const gross = companyTxs.reduce((acc, t) => acc + t.total_amount, 0);
+            const net = companyTxs.reduce((acc, t) => acc + t.company_share_80, 0);
+
+            const elemSold = document.getElementById('company-kpi-sold');
+            if (elemSold) {
+                elemSold.textContent = companyTickets.length;
+                document.getElementById('company-kpi-gross').textContent = `R$ ${gross.toFixed(2)}`;
+                document.getElementById('company-kpi-net').textContent = `R$ ${net.toFixed(2)}`;
+            }
+
+            const table = document.getElementById('company-events-table');
+            if (!table) return;
+            table.innerHTML = '';
+
+            if (companyEvents.length === 0) {
+                table.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Nenhum evento cadastrado para esta produtora.</td></tr>`;
+                return;
+            }
+
+            companyEvents.forEach(evt => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-white">${evt.title}</td>
+                    <td class="p-3.5">${evt.category}</td>
+                    <td class="p-3.5">R$ ${evt.price.toFixed(2)}</td>
+                    <td class="p-3.5 font-bold ${evt.stock <= 0 ? 'text-rose-400' : 'text-slate-200'}">${evt.stock} un.</td>
+                    <td class="p-3.5 text-rose-400 font-semibold"><i class="fa-solid fa-heart mr-1"></i> ${evt.likes_count}</td>
+                `;
+                table.appendChild(tr);
+            });
+        }
+
+        // Renderizar Painel ADMIN (Métricas Globais + Diretório de Empresas + Auditoria + Gestão de Usuários)
+        function renderAdminTables() {
+            const elemGmv = document.getElementById('admin-kpi-gmv');
+            if (!elemGmv) return;
+
+            const gmv = financialTransactions.reduce((acc, t) => acc + t.total_amount, 0);
+            const commission = financialTransactions.reduce((acc, t) => acc + t.platform_share_20, 0);
+
+            elemGmv.textContent = `R$ ${gmv.toFixed(2)}`;
+            document.getElementById('admin-kpi-commission').textContent = `R$ ${commission.toFixed(2)}`;
+            document.getElementById('admin-kpi-tickets').textContent = ticketsDatabase.length;
+
+            // 1. SEÇÃO: DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS
+            const companiesTable = document.getElementById('admin-companies-table');
+            const companiesList = usersDatabase.filter(u => u.role === 'EMPRESA');
+            document.getElementById('admin-companies-count').textContent = `${companiesList.length} empresa(s)`;
+            companiesTable.innerHTML = '';
+
+            if (companiesList.length === 0) {
+                companiesTable.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Nenhuma empresa parceira cadastrada na plataforma.</td></tr>`;
+            } else {
+                companiesList.forEach(comp => {
+                    const compEvents = eventsDatabase.filter(e => e.company_id === comp.id);
+                    const compEventIds = compEvents.map(e => e.id);
+                    const compTickets = ticketsDatabase.filter(t => compEventIds.includes(t.event_id));
+                    const compTxs = financialTransactions.filter(f => compTickets.some(t => t.id === f.ticket_id) || f.company_id === comp.id);
+                    
+                    const grossRev = compTxs.reduce((acc, t) => acc + t.total_amount, 0);
+                    const platformCommission = compTxs.reduce((acc, t) => acc + t.platform_share_20, 0);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-building text-sky-400"></i> ${comp.name}
+                        </td>
+                        <td class="p-3.5 text-slate-300">${comp.email}</td>
+                        <td class="p-3.5 text-center font-semibold text-slate-200">${compEvents.length}</td>
+                        <td class="p-3.5 text-center font-bold text-brand-400">${compTickets.length}</td>
+                        <td class="p-3.5 font-bold text-slate-100">R$ ${grossRev.toFixed(2)}</td>
+                        <td class="p-3.5 font-bold text-amber-400">R$ ${platformCommission.toFixed(2)}</td>
+                        <td class="p-3.5 text-right"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded font-bold uppercase text-[10px]">Ativa</span></td>
+                    `;
+                    companiesTable.appendChild(tr);
+                });
+            }
+
+            // 2. SEÇÃO: FILA DE AUDITORIA DE SOLICITAÇÕES
+            const reqTable = document.getElementById('admin-requests-table');
+            const pendingReqs = companyRequests.filter(r => r.status === 'PENDENTE');
+            document.getElementById('requests-count').textContent = `${pendingReqs.length} pendente(s)`;
+            reqTable.innerHTML = '';
+
+            if (companyRequests.length === 0) {
+                reqTable.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Nenhuma solicitação de vinculação pendente na fila.</td></tr>`;
+            } else {
+                companyRequests.forEach(req => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3.5 font-bold text-white">${req.company_name}</td>
+                        <td class="p-3.5 font-mono">${req.cnpj}</td>
+                        <td class="p-3.5">${req.email}</td>
+                        <td class="p-3.5"><span class="px-2 py-0.5 rounded font-bold ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">${req.status}</span></td>
+                        <td class="p-3.5 text-right space-x-2">
+                            ${req.status === 'PENDENTE' ? `
+                                <button onclick="approveCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400 transition">Aprovar & Promover</button>
+                                <button onclick="rejectCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30 transition">Rejeitar</button>
+                            ` : '<span class="text-slate-500">Concluído</span>'}
+                        </td>
+                    `;
+                    reqTable.appendChild(tr);
+                });
+            }
+
+            // 3. SEÇÃO: GESTÃO DE USUÁRIOS (PROMOÇÃO E DES-PROMOÇÃO EM TEMPO REAL)
+            const userTable = document.getElementById('admin-users-table');
+            userTable.innerHTML = '';
+
+            usersDatabase.forEach(usr => {
+                let actionButtonsHTML = '';
+
+                if (usr.role === 'PUBLICO') {
+                    actionButtonsHTML = `
+                        <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i> Promover a Empresa
+                        </button>
+                        <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
+                        </button>
+                    `;
+                } else if (usr.role === 'EMPRESA') {
+                    actionButtonsHTML = `
+                        <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
+                        </button>
+                        <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
+                        </button>
+                    `;
+                } else if (usr.role === 'ADMIN') {
+                    actionButtonsHTML = `
+                        <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-building mr-1"></i> Alterar para Empresa
+                        </button>
+                        <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
+                            <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
+                        </button>
+                    `;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-white">${usr.name}</td>
+                    <td class="p-3.5 text-slate-300">${usr.email}</td>
+                    <td class="p-3.5"><span class="px-2.5 py-1 ${usr.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (usr.role === 'EMPRESA' ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' : 'bg-slate-700 text-brand-400')} font-extrabold rounded text-[10px]">${usr.role}</span></td>
+                    <td class="p-3.5 text-right space-x-1">${actionButtonsHTML}</td>
+                `;
+                userTable.appendChild(tr);
+            });
+        }
+
+        // Alteração em Tempo Real de Papel de Usuário
+        function promoteUserRole(userId, newRole) {
+            const usr = usersDatabase.find(u => u.id === userId);
+            if (!usr) return;
+
+            const oldRole = usr.role;
+            usr.role = newRole;
+
+            // Atualiza sessão ativa se o usuário alterado for o atual
+            if (currentUser && currentUser.id === usr.id) {
+                currentUser.role = newRole;
+            }
+
+            updateAuthState();
+            showNoticeModal(
+                'Papel Atualizado!', 
+                `O usuário "${usr.name}" foi alterado de [${oldRole}] para [${newRole}] com sucesso.`, 
+                'check'
+            );
+        }
+
+        function approveCompanyRequest(reqId) {
+            const req = companyRequests.find(r => r.id === reqId);
+            if (req) {
+                req.status = 'APROVADO';
+                const user = usersDatabase.find(u => u.id === req.user_id);
+                if (user) {
+                    user.role = 'EMPRESA';
+                    if (currentUser && currentUser.id === user.id) {
+                        currentUser.role = 'EMPRESA';
+                    }
+                }
+                updateAuthState();
+                showNoticeModal('Solicitação Aprovada', `A empresa "${req.company_name}" foi aprovada e o usuário associado foi promovido a EMPRESA.`, 'check');
+            }
+        }
+
+        function rejectCompanyRequest(reqId) {
+            const req = companyRequests.find(r => r.id === reqId);
+            if (req) {
+                req.status = 'REJEITADO';
+                renderAdminTables();
+                renderUserRequests();
+                showToast('Solicitação rejeitada com sucesso.');
+            }
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            currentUser.name = document.getElementById('input-name').value.trim();
+            currentUser.email = document.getElementById('input-email').value.trim();
+            currentUser.initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+
+            updateAuthState();
+            showNoticeModal('Perfil Salvo', 'Seus dados cadastrais foram atualizados com sucesso.', 'check');
+        }
+
+        // Modais Auxiliares
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function switchToRegisterModal() {
+            closeModal('modal-login');
+            openModal('modal-cadastro');
+        }
+
+        function switchToLoginModal() {
+            closeModal('modal-cadastro');
+            openModal('modal-login');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Notificações e Toasts Estilizados
+        function showNoticeModal(title, message, iconType = 'warning', actions = null) {
+            document.getElementById('notice-title').textContent = title;
+            document.getElementById('notice-message').textContent = message;
+
+            const iconContainer = document.getElementById('notice-icon-container');
+            if (iconType === 'check') {
+                iconContainer.className = 'w-14 h-14 bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                iconContainer.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else if (iconType === 'lock') {
+                iconContainer.className = 'w-14 h-14 bg-sky-500/20 text-sky-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                iconContainer.innerHTML = '<i class="fa-solid fa-lock"></i>';
+            } else {
+                iconContainer.className = 'w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+
+            const actionContainer = document.getElementById('notice-action-buttons');
+            actionContainer.innerHTML = '';
+
+            if (actions && Array.isArray(actions)) {
+                actions.forEach(act => {
+                    const btn = document.createElement('button');
+                    btn.className = act.primary 
+                        ? 'w-full py-2.5 mb-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition' 
+                        : 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
+                    btn.textContent = act.label;
+                    btn.onclick = () => {
+                        closeModal('modal-custom-notice');
+                        if (act.action) act.action();
+                    };
+                    actionContainer.appendChild(btn);
+                });
+            } else {
+                const btn = document.createElement('button');
+                btn.className = 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
+                btn.textContent = 'Entendido';
+                btn.onclick = () => closeModal('modal-custom-notice');
+                actionContainer.appendChild(btn);
+            }
+
+            openModal('modal-custom-notice');
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-800 border border-brand-500/40 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 opacity-0 translate-y-2 pointer-events-auto';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-400 text-sm"></i> ${message}`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
