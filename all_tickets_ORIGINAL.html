@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketPass - Plataforma de Ingressos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- BARRA DE SIMULAÇÃO DE PERMISSÕES -->
+    <div id="role-bar" class="bg-slate-950 border-b border-slate-800 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
+        <div class="flex items-center gap-2">
+            <span class="bg-brand-500/10 text-brand-500 px-2 py-0.5 rounded font-semibold border border-brand-500/20">
+                <i class="fa-solid fa-sliders mr-1"></i> Modo de Teste de Permissão
+            </span>
+            <span class="text-slate-400 hidden sm:inline">Alterne o nível de acesso para ver as mudanças na barra e no conteúdo:</span>
+        </div>
+        <div class="flex items-center gap-1 sm:gap-2">
+            <button onclick="setRole('deslogado')" id="btn-role-deslogado" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user-slash mr-1"></i> Visitante
+            </button>
+            <button onclick="setRole('cliente')" id="btn-role-cliente" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-user mr-1"></i> Cliente
+            </button>
+            <button onclick="setRole('empresa')" id="btn-role-empresa" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-building mr-1"></i> Empresa
+            </button>
+            <button onclick="setRole('adm')" id="btn-role-adm" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
+                <i class="fa-solid fa-shield-halved mr-1"></i> ADM
+            </button>
+        </div>
+    </div>
+
+    <!-- NAVBAR PRINCIPAL -->
+    <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-ticket text-slate-950 text-xl font-bold -rotate-12"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-tight text-white flex items-center gap-1">
+                            Ticket<span class="text-brand-500">Pass</span>
+                        </span>
+                        <span class="block text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Eventos & Ingressos</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Box -->
+                <div class="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-700/50 shadow-inner">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-white bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-house text-brand-500"></i>
+                        <span>INÍCIO</span>
+                    </button>
+
+                    <!-- Área Logado -->
+                    <div id="nav-group-user" class="flex items-center gap-1 px-1 border-l border-r border-slate-700/80 mx-1">
+                        <button onclick="navigateTo('conta')" id="nav-conta" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-regular fa-id-card text-brand-500"></i>
+                            <span>CONTA</span>
+                        </button>
+                        <button onclick="navigateTo('ingressos')" id="nav-ingressos" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-solid fa-ticket text-brand-500"></i>
+                            <span>INGRESSOS</span>
+                        </button>
+                    </div>
+
+                    <!-- Área Empresa / ADM -->
+                    <div class="flex items-center gap-1">
+                        <button onclick="navigateTo('empresa')" id="nav-empresa" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-solid fa-building-user text-sky-400"></i>
+                            <span>EMPRESA</span>
+                        </button>
+                        <button onclick="navigateTo('adm')" id="nav-adm" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 transition flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>ADM</span>
+                        </button>
+                    </div>
+
+                    <div id="auth-buttons-container" class="ml-1 pl-1 border-l border-slate-700/80">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+
+                <!-- Botão Menu Mobile -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-house text-brand-500"></i> Início / Eventos
+            </button>
+            <div id="mobile-user-links" class="space-y-2 pt-2 border-t border-slate-800">
+                <button onclick="navigateTo('conta'); toggleMobileMenu()" id="mob-conta" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                    <i class="fa-regular fa-id-card text-brand-500"></i> Conta
+                </button>
+                <button onclick="navigateTo('ingressos'); toggleMobileMenu()" id="mob-ingressos" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-ticket text-brand-500"></i> Meus Ingressos
+                </button>
+            </div>
+            <button onclick="navigateTo('empresa'); toggleMobileMenu()" id="mob-empresa" class="w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-building-user text-sky-400"></i> Área Empresa
+            </button>
+            <button onclick="navigateTo('adm'); toggleMobileMenu()" id="mob-adm" class="w-full text-left px-3 py-2 rounded-lg text-amber-400 hover:bg-amber-400/10 font-medium flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> Painel ADM
+            </button>
+            <div id="mobile-auth-container" class="pt-2 border-t border-slate-800">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- BANNER DE STATUS DE ACESSO DA SIMULAÇÃO -->
+        <div class="mb-6 p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-3">
+                <div id="current-role-badge-icon" class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Nível de Acesso Atual</div>
+                    <div id="current-role-title" class="text-base font-bold text-white">Visitante (Deslogado)</div>
+                </div>
+            </div>
+            <div id="current-role-desc" class="text-xs text-slate-400 max-w-md">
+                Navegação restrita. Entre na sua conta para comprar ingressos ou acessar seus dados.
+            </div>
+        </div>
+
+        <!-- ABA 1: PÁGINA INICIAL / VITRINE DE EVENTOS -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-900/60 via-slate-900 to-slate-900 border border-slate-800 p-8 sm:p-12">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
+                        <i class="fa-solid fa-fire mr-1"></i> Os melhores eventos da cidade
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
+                        Garanta seu lugar nos maiores shows e festivais.
+                    </h1>
+                    <p class="text-slate-300 text-sm sm:text-base">
+                        Sua plataforma completa de ingressos digitais com praticidade, segurança e acesso imediato via QR Code.
+                    </p>
+                    <div class="pt-2 flex items-center gap-2 max-w-lg">
+                        <div class="relative flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="event-search" onkeyup="filterEvents()" placeholder="Buscar shows, teatro, festas..." class="w-full pl-11 pr-4 py-3 bg-slate-800/90 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-ticket text-[280px]"></i>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 overflow-x-auto pb-2">
+                <button onclick="filterCategory('todos')" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-brand-500/20">Todos os Eventos</button>
+                <button onclick="filterCategory('show')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows & Festivais</button>
+                <button onclick="filterCategory('teatro')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro & Stand-up</button>
+                <button onclick="filterCategory('esporte')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Esportes</button>
+                <button onclick="filterCategory('festas')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas & Baladas</button>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sparkles text-amber-400"></i> Eventos em Destaque
+                    </h2>
+                    <span class="text-xs text-slate-400" id="event-count">Exibindo todos os eventos</span>
+                </div>
+                
+                <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards renderizados via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 2: CONTA DO USUÁRIO -->
+        <section id="tab-conta" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                    <i class="fa-regular fa-id-card text-brand-500"></i> Minha Conta
+                </h2>
+                <p class="text-sm text-slate-400">Gerencie seus dados pessoais, preferências e segurança.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Resumo do Perfil -->
+                <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
+                    <div class="text-center space-y-3">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-slate-700 border-4 border-brand-500/30 flex items-center justify-center text-4xl text-slate-300 font-bold relative">
+                            <span id="profile-avatar-initials">LS</span>
+                            <span class="absolute bottom-0 right-0 w-6 h-6 bg-brand-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] text-slate-950">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <h3 id="profile-name" class="text-lg font-bold text-white">Lucas Silva</h3>
+                            <p id="profile-email" class="text-xs text-slate-400">lucas.silva@email.com</p>
+                        </div>
+                        <span id="profile-badge" class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-bold uppercase">
+                            Cliente Verificado
+                        </span>
+                    </div>
+
+                    <div class="space-y-3 pt-4 border-t border-slate-700/60">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Membro desde:</span>
+                            <span class="text-slate-200 font-medium">Janeiro, 2024</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Ingressos Comprados:</span>
+                            <span class="text-brand-400 font-bold" id="profile-tickets-count">2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário de Dados -->
+                <div class="lg:col-span-2 bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
+                    <h3 class="text-base font-bold text-white border-b border-slate-700/60 pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-slate-400"></i> Informações Cadastrais
+                    </h3>
+
+                    <form onsubmit="saveProfile(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo</label>
+                                <input type="text" id="input-name" value="Lucas Silva" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">CPF</label>
+                                <input type="text" value="123.456.789-00" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
+                                <input type="email" id="input-email" value="lucas.silva@email.com" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Telefone / WhatsApp</label>
+                                <input type="text" value="(11) 98765-4321" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex justify-end gap-3">
+                            <button type="submit" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md shadow-brand-500/20">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 3: MEUS INGRESSOS -->
+        <section id="tab-ingressos" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-ticket text-brand-500"></i> Meus Ingressos
+                    </h2>
+                    <p class="text-sm text-slate-400">Acesse seus bilhetes virtuais e apresente os QR Codes no evento.</p>
+                </div>
+            </div>
+
+            <div id="tickets-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Ingressos gerados via JS -->
+            </div>
+        </section>
+
+        <!-- ABA 4: ÁREA DA EMPRESA / ORGANIZADOR -->
+        <section id="tab-empresa" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-building-user text-sky-400"></i> Painel da Empresa / Produtora
+                    </h2>
+                    <p class="text-sm text-slate-400">Gerencie seus eventos cadastrados, vendas e novos lançamentos.</p>
+                </div>
+                <button onclick="openModal('modal-novo-evento')" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Criar Novo Evento
+                </button>
+            </div>
+
+            <!-- Dashboard da Empresa -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Total de Ingressos Vendidos</span>
+                    <div class="text-2xl font-black text-white mt-1">1.480</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Receita Bruta</span>
+                    <div class="text-2xl font-black text-brand-400 mt-1">R$ 184.200,00</div>
+                </div>
+                <div class="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Eventos Ativos</span>
+                    <div class="text-2xl font-black text-sky-400 mt-1">3</div>
+                </div>
+            </div>
+
+            <!-- Tabela de Eventos Cadastrados -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span>Meus Eventos</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Evento</th>
+                                <th class="p-3.5">Data</th>
+                                <th class="p-3.5">Vendidos</th>
+                                <th class="p-3.5">Status</th>
+                                <th class="p-3.5 text-right">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/40">
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Festival Rock In Rio - Side Show</td>
+                                <td class="p-3.5">15/11/2026</td>
+                                <td class="p-3.5">850 / 1000</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded-md font-bold">Publicado</span></td>
+                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Sertanejo Night Live</td>
+                                <td class="p-3.5">20/12/2026</td>
+                                <td class="p-3.5">420 / 500</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded-md font-bold">Publicado</span></td>
+                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Comédia Stand-up da Virada</td>
+                                <td class="p-3.5">31/12/2026</td>
+                                <td class="p-3.5">210 / 300</td>
+                                <td class="p-3.5"><span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-md font-bold">Análise</span></td>
+                                <td class="p-3.5 text-right"><button class="text-sky-400 hover:underline">Editar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 5: PAINEL ADMINISTRATIVO (ADM) -->
+        <section id="tab-adm" class="tab-content hidden space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-user-shield text-amber-400"></i> Painel Geral de Administração (ADM)
+                </h2>
+                <p class="text-sm text-slate-400">Visão global da plataforma, aprovações de organizadores e controle de usuários.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Usuários Registrados</span>
+                    <div class="text-2xl font-black text-white mt-1">12.450</div>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Empresas Parceiras</span>
+                    <div class="text-2xl font-black text-sky-400 mt-1">142</div>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Taxa de Plataforma (GMV)</span>
+                    <div class="text-2xl font-black text-brand-400 mt-1">R$ 45.120,00</div>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60">
+                    <span class="text-xs text-slate-400 font-medium">Aprovações Pendentes</span>
+                    <div class="text-2xl font-black text-amber-400 mt-1">5</div>
+                </div>
+            </div>
+
+            <!-- Tabela de Aprovações Pendentes -->
+            <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
+                    <span>Solicitações de Aprovamento de Eventos</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-slate-400 font-semibold border-b border-slate-700/60">
+                            <tr>
+                                <th class="p-3.5">Organizador</th>
+                                <th class="p-3.5">Nome do Evento</th>
+                                <th class="p-3.5">Data Prevista</th>
+                                <th class="p-3.5">Valor do Ingresso</th>
+                                <th class="p-3.5 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/40">
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Live Eventos Ltda</td>
+                                <td class="p-3.5">Comédia Stand-up da Virada</td>
+                                <td class="p-3.5">31/12/2026</td>
+                                <td class="p-3.5">R$ 60,00</td>
+                                <td class="p-3.5 text-right space-x-2">
+                                    <button class="px-2 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400">Aprovar</button>
+                                    <button class="px-2 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30">Rejeitar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: COMPRAR INGRESSO -->
+    <div id="modal-comprar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+            <button onclick="closeModal('modal-comprar')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="space-y-2">
+                <span class="text-xs font-extrabold text-brand-500 uppercase tracking-wider">Confirmar Compra</span>
+                <h3 id="modal-event-title" class="text-xl font-bold text-white">Nome do Evento</h3>
+                <p id="modal-event-price" class="text-sm font-semibold text-slate-300">R$ 0,00</p>
+            </div>
+            
+            <div class="space-y-4 pt-2 border-t border-slate-800">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Quantidade</label>
+                    <select id="modal-qty" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="1">1 Ingresso</option>
+                        <option value="2">2 Ingressos</option>
+                        <option value="3">3 Ingressos</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Forma de Pagamento</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" class="p-3 bg-slate-800 border border-brand-500/50 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-pix text-brand-400 text-base"></i> PIX Instantâneo
+                        </button>
+                        <button type="button" class="p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-slate-400 flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-credit-card text-base"></i> Cartão
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="confirmPurchase()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-lg shadow-brand-500/20">
+                Finalizar Pagamento
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: VER QR CODE DO INGRESSO -->
+    <div id="modal-qrcode" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-qrcode')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 id="qr-event-title" class="text-lg font-bold text-white">Ingresso Virtual</h3>
+            <div class="p-4 bg-white rounded-2xl inline-block shadow-inner">
+                <!-- QR Code Simulado via FontAwesome -->
+                <i class="fa-solid fa-qrcode text-9xl text-slate-950"></i>
+            </div>
+            <p class="text-xs text-slate-400">Apresente este código na entrada do evento para validação.</p>
+        </div>
+    </div>
+
+    <!-- MODAL: NOVO EVENTO (EMPRESA) -->
+    <div id="modal-novo-evento" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-novo-evento')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white">Cadastrar Novo Evento</h3>
+            <form onsubmit="createEvent(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Título do Evento</label>
+                    <input type="text" id="new-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Categoria</label>
+                        <select id="new-cat" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                            <option value="show">Show / Festival</option>
+                            <option value="teatro">Teatro / Stand-up</option>
+                            <option value="esporte">Esporte</option>
+                            <option value="festas">Festa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Preço (R$)</label>
+                        <input type="number" id="new-price" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Data do Evento</label>
+                    <input type="date" id="new-date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
+                    Enviar para Aprovação
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT PRINCIPAL -->
+    <script>
+        // Dados dos Eventos
+        const initialEvents = [
+            { id: 1, title: 'Festival Rock In Rio - Side Show', category: 'show', price: 180, date: '15 de Novembro, 2026', location: 'Arena Central', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
+            { id: 2, title: 'Comédia Stand-up da Virada', category: 'teatro', price: 60, date: '31 de Dezembro, 2026', location: 'Teatro Municipal', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
+            { id: 3, title: 'Final da Copa Regional', category: 'esporte', price: 90, date: '10 de Dezembro, 2026', location: 'Estádio Olímpico', img: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&auto=format&fit=crop&q=80' },
+            { id: 4, title: 'Sertanejo Night Live', category: 'festas', price: 120, date: '20 de Dezembro, 2026', location: 'Espaço Hall', img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+        ];
+
+        let currentRole = 'deslogado'; // 'deslogado', 'cliente', 'empresa', 'adm'
+        let myTickets = [
+            { id: 'T-9823', title: 'Festival Rock In Rio - Side Show', date: '15 Nov 2026', qty: 1, status: 'Ativo' },
+            { id: 'T-4412', title: 'Comédia Stand-up da Virada', date: '31 Dez 2026', qty: 2, status: 'Ativo' }
+        ];
+        let selectedEventForPurchase = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEvents(initialEvents);
+            renderMyTickets();
+            setRole('deslogado');
+        });
+
+        // Controle de Permissões / Papéis
+        function setRole(role) {
+            currentRole = role;
+
+            // Atualiza Destaque dos Botões de Papel
+            ['deslogado', 'cliente', 'empresa', 'adm'].forEach(r => {
+                const btn = document.getElementById(`btn-role-${r}`);
+                if (r === role) {
+                    btn.className = 'px-2.5 py-1 rounded text-white bg-brand-600 font-bold';
+                } else {
+                    btn.className = 'px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium';
+                }
+            });
+
+            // Atualiza Banner de Nível
+            const roleTitle = document.getElementById('current-role-title');
+            const roleDesc = document.getElementById('current-role-desc');
+            const authContainer = document.getElementById('auth-buttons-container');
+            const mobAuthContainer = document.getElementById('mobile-auth-container');
+
+            if (role === 'deslogado') {
+                roleTitle.textContent = 'Visitante (Deslogado)';
+                roleDesc.textContent = 'Navegação restrita. Entre na sua conta para comprar ingressos ou gerenciar seus dados.';
+                
+                authContainer.innerHTML = `
+                    <button onclick="setRole('cliente')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition">
+                        Entrar / Criar Conta
+                    </button>
+                `;
+                mobAuthContainer.innerHTML = `
+                    <button onclick="setRole('cliente'); toggleMobileMenu()" class="w-full py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-sm">
+                        Entrar na Conta
+                    </button>
+                `;
+
+                document.getElementById('nav-group-user').classList.add('opacity-40');
+                document.getElementById('nav-empresa').classList.add('opacity-40');
+                document.getElementById('nav-adm').classList.add('hidden');
+                document.getElementById('mob-adm').classList.add('hidden');
+            } else {
+                let roleLabel = role === 'cliente' ? 'Cliente' : (role === 'empresa' ? 'Empresa / Produtora' : 'Administrador');
+                roleTitle.textContent = `Logado como: ${roleLabel}`;
+                roleDesc.textContent = 'Acesso total liberado para as funcionalidades correspondentes do seu papel.';
+
+                authContainer.innerHTML = `
+                    <button onclick="setRole('deslogado')" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
+                `;
+                mobAuthContainer.innerHTML = `
+                    <button onclick="setRole('deslogado'); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-sm">
+                        Sair da Conta
+                    </button>
+                `;
+
+                document.getElementById('nav-group-user').classList.remove('opacity-40');
+                document.getElementById('nav-empresa').classList.remove('opacity-40');
+
+                if (role === 'adm') {
+                    document.getElementById('nav-adm').classList.remove('hidden');
+                    document.getElementById('mob-adm').classList.remove('hidden');
+                } else {
+                    document.getElementById('nav-adm').classList.add('hidden');
+                    document.getElementById('mob-adm').classList.add('hidden');
+                }
+            }
+
+            // Volta para Home
+            navigateTo('home');
+        }
+
+        // Navegação de Abas
+        function navigateTo(tabName) {
+            // Verificar Permissões antes de navegar
+            if (currentRole === 'deslogado' && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
+                alert('Você precisa estar logado para acessar esta área! Clique em "Entrar" ou selecione um modo de permissão acima.');
+                return;
+            }
+
+            if (currentRole !== 'adm' && tabName === 'adm') {
+                alert('Acesso negado: Apenas administradores podem acessar o Painel ADM.');
+                return;
+            }
+
+            if (currentRole === 'cliente' && tabName === 'empresa') {
+                alert('Sua conta é do tipo Cliente. Alterne para o perfil "Empresa" para gerenciar eventos.');
+                return;
+            }
+
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+
+            // Mostrar a selecionada
+            const target = document.getElementById(`tab-${tabName}`);
+            if (target) target.classList.remove('hidden');
+
+            // Atualizar estado ativo dos botões da navbar
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('text-slate-300');
+            });
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-white');
+            }
+        }
+
+        // Renderizar Eventos na Vitrine
+        function renderEvents(events) {
+            const grid = document.getElementById('events-grid');
+            document.getElementById('event-count').textContent = `Exibindo ${events.length} evento(s)`;
+            grid.innerHTML = '';
+
+            events.forEach(evt => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-800/60 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl hover:border-slate-600 transition flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="${evt.img}" alt="${evt.title}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 px-3 py-1 bg-slate-950/80 backdrop-blur-md text-brand-400 border border-brand-500/30 rounded-full text-[10px] font-bold uppercase">
+                                R$ ${evt.price},00
+                            </span>
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <h3 class="font-bold text-white text-base leading-snug">${evt.title}</h3>
+                            <div class="space-y-1 text-xs text-slate-400">
+                                <p class="flex items-center gap-2"><i class="fa-regular fa-calendar text-brand-500"></i> ${evt.date}</p>
+                                <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-500"></i> ${evt.location}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0">
+                        <button onclick="openBuyModal(${evt.id})" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition shadow-md shadow-brand-500/10 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-ticket"></i> Comprar Ingresso
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Renderizar Ingressos Comprados
+        function renderMyTickets() {
+            const container = document.getElementById('tickets-container');
+            document.getElementById('profile-tickets-count').textContent = myTickets.length;
+            container.innerHTML = '';
+
+            if (myTickets.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-sm">Você ainda não comprou ingressos.</p>`;
+                return;
+            }
+
+            myTickets.forEach(ticket => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center justify-between gap-4';
+                item.innerHTML = `
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-extrabold text-brand-500 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">${ticket.id}</span>
+                        <h4 class="font-bold text-white text-sm">${ticket.title}</h4>
+                        <p class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${ticket.date} • ${ticket.qty}x Ingresso</p>
+                    </div>
+                    <button onclick="openModal('modal-qrcode')" class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs rounded-xl flex items-center gap-2 transition">
+                        <i class="fa-solid fa-qrcode text-brand-400"></i> QR Code
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Filtro de Busca
+        function filterEvents() {
+            const query = document.getElementById('event-search').value.toLowerCase();
+            const filtered = initialEvents.filter(e => e.title.toLowerCase().includes(query));
+            renderEvents(filtered);
+        }
+
+        // Filtro de Categoria
+        function filterCategory(cat) {
+            if (cat === 'todos') {
+                renderEvents(initialEvents);
+            } else {
+                const filtered = initialEvents.filter(e => e.category === cat);
+                renderEvents(filtered);
+            }
+        }
+
+        // Compra de Ingresso
+        function openBuyModal(eventId) {
+            if (currentRole === 'deslogado') {
+                alert('Por favor, entre na sua conta para efetuar a compra do ingresso.');
+                return;
+            }
+
+            selectedEventForPurchase = initialEvents.find(e => e.id === eventId);
+            document.getElementById('modal-event-title').textContent = selectedEventForPurchase.title;
+            document.getElementById('modal-event-price').textContent = `R$ ${selectedEventForPurchase.price},00 / ingresso`;
+            openModal('modal-comprar');
+        }
+
+        function confirmPurchase() {
+            const qty = parseInt(document.getElementById('modal-qty').value);
+            const newTicket = {
+                id: `T-${Math.floor(1000 + Math.random() * 9000)}`,
+                title: selectedEventForPurchase.title,
+                date: selectedEventForPurchase.date,
+                qty: qty,
+                status: 'Ativo'
+            };
+
+            myTickets.push(newTicket);
+            renderMyTickets();
+            closeModal('modal-comprar');
+            alert('🎉 Compra realizada com sucesso! O seu ingresso já está disponível na aba "Meus Ingressos".');
+            navigateTo('ingressos');
+        }
+
+        // Criar Novo Evento (Empresa)
+        function createEvent(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-title').value;
+            const cat = document.getElementById('new-cat').value;
+            const price = document.getElementById('new-price').value;
+            const date = document.getElementById('new-date').value;
+
+            const newEvt = {
+                id: initialEvents.length + 1,
+                title: title,
+                category: cat,
+                price: parseFloat(price),
+                date: date,
+                location: 'Local a Definir',
+                img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80'
+            };
+
+            initialEvents.push(newEvt);
+            renderEvents(initialEvents);
+            closeModal('modal-novo-evento');
+            alert('Evento cadastrado e enviado para o painel de aprovação ADM com sucesso!');
+        }
+
+        // Salvar Perfil
+        function saveProfile(e) {
+            e.preventDefault();
+            const newName = document.getElementById('input-name').value;
+            const newEmail = document.getElementById('input-email').value;
+
+            document.getElementById('profile-name').textContent = newName;
+            document.getElementById('profile-email').textContent = newEmail;
+            
+            const initials = newName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('profile-avatar-initials').textContent = initials;
+
+            alert('Dados cadastrais atualizados com sucesso!');
+        }
+
+        // Modais e Menu Mobile
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
