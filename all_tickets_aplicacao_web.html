@@ -99,7 +99,7 @@
                         <span>FEED EVENTOS</span>
                     </button>
 
-                    <!-- Área Logado (Público/Empresa/Admin) -->
+                    <!-- Área Logado -->
                     <div id="nav-group-user" class="flex items-center gap-1 px-1 border-l border-r border-slate-700/80 mx-1">
                         <button onclick="navigateTo('conta')" id="nav-conta" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
                             <i class="fa-regular fa-id-card text-brand-500"></i>
@@ -111,7 +111,7 @@
                         </button>
                     </div>
 
-                    <!-- Módulos Exclusivos (Strict RBAC: Painel Empresa APENAS para perfil EMPRESA, Painel ADM APENAS para ADMIN) -->
+                    <!-- Módulos Exclusivos (RBAC) -->
                     <div class="flex items-center gap-1">
                         <button onclick="navigateTo('empresa')" id="nav-empresa" class="nav-btn hidden px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
                             <i class="fa-solid fa-building-user text-sky-400"></i>
@@ -190,7 +190,7 @@
                         Gestão Centralizada de Eventos e Ingressos Digitais.
                     </h1>
                     
-                    <!-- Barra de Pesquisa e Botão "Virar Empresa" (Visível apenas para PUBLICO) -->
+                    <!-- Barra de Pesquisa e Botão Virar Empresa -->
                     <div class="pt-2 flex items-center gap-3 max-w-lg flex-wrap sm:flex-nowrap">
                         <div class="relative flex-1 w-full">
                             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -207,11 +207,11 @@
             </div>
 
             <!-- Categorias Oficiais -->
-            <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
-                <button onclick="filterCategory('todos')" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-brand-500/20">Todos os Eventos</button>
-                <button onclick="filterCategory('Shows e Festivais')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows e Festivais</button>
-                <button onclick="filterCategory('Teatro e Cultura')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro e Cultura</button>
-                <button onclick="filterCategory('Festas e Nightlife')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas e Nightlife</button>
+            <div id="category-buttons-container" class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+                <button onclick="filterCategory('todos', this)" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl text-xs whitespace-nowrap transition shadow-lg shadow-brand-500/20">Todos os Eventos</button>
+                <button onclick="filterCategory('Shows e Festivais', this)" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows e Festivais</button>
+                <button onclick="filterCategory('Teatro e Cultura', this)" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Teatro e Cultura</button>
+                <button onclick="filterCategory('Festas e Nightlife', this)" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Festas e Nightlife</button>
             </div>
 
             <!-- Grid de Cards de Eventos -->
@@ -276,7 +276,7 @@
                             <i class="fa-solid fa-user-gear text-slate-400"></i> Informações Cadastrais
                         </h3>
 
-                        <form onsubmit="saveProfile(event)" class="space-y-4">
+                        <form action="javascript:void(0);" onsubmit="event.preventDefault(); saveProfile(event); return false;" class="space-y-4">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo / Razão Social</label>
@@ -296,7 +296,7 @@
                         </form>
                     </div>
 
-                    <!-- Card de Solicitação de Parceria (Oculto para EMPRESA/ADMIN) -->
+                    <!-- Card de Solicitação de Parceria -->
                     <div id="partner-request-section" class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
                             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -310,7 +310,7 @@
                             Submeta seus dados de CNPJ para transformar seu perfil de PUBLICO para EMPRESA e publicar seus próprios eventos na plataforma.
                         </p>
                         <div id="user-requests-list" class="space-y-2 pt-2">
-                            <!-- Injetado dinamicamente via JS e filtrado por usuário -->
+                            <!-- Injetado dinamicamente via JS -->
                         </div>
                     </div>
                 </div>
@@ -324,7 +324,7 @@
                     <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
                         <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital de Ingressos
                     </h2>
-                    <p class="text-sm text-slate-400">Seus bilhetes com códigos únicos para apresentação na portaria (sem QR Code).</p>
+                    <p class="text-sm text-slate-400">Seus bilhetes com códigos únicos para apresentação na portaria.</p>
                 </div>
             </div>
 
@@ -340,7 +340,7 @@
                     <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
                         <i class="fa-solid fa-building-user text-sky-400"></i> Painel do Produtor
                     </h2>
-                    <p class="text-sm text-slate-400">Acompanhe vendas, publique atrações e valide entradas de participantes.</p>
+                    <p class="text-sm text-slate-400">Acompanhe vendas, publique atrações, edite eventos e valide entradas.</p>
                 </div>
                 <button onclick="openModal('modal-novo-evento')" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-sky-500/20">
                     <i class="fa-solid fa-plus"></i> Cadastrar Evento
@@ -363,7 +363,7 @@
                 </div>
             </div>
 
-            <!-- MÓDULO VALIDADOR DE PORTARIA (CÓDIGO DIGITADO) -->
+            <!-- MÓDULO VALIDADOR DE PORTARIA -->
             <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4 shadow-xl">
                 <div class="flex items-center gap-3 border-b border-slate-700/60 pb-3">
                     <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold">
@@ -388,10 +388,11 @@
                 <div id="gate-result-box" class="hidden p-4 rounded-xl border text-sm font-medium"></div>
             </div>
 
-            <!-- Tabela de Eventos Cadastrados pela Empresa -->
+            <!-- Tabela de Eventos Cadastrados -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
-                <div class="p-4 border-b border-slate-700/60 font-bold text-white">
+                <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span>Atrações Cadastradas</span>
+                    <span class="text-xs text-slate-400">Gestão e alteração de atrações</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
@@ -402,6 +403,7 @@
                                 <th class="p-3.5">Preço Unitário</th>
                                 <th class="p-3.5">Estoque</th>
                                 <th class="p-3.5">Curtidas</th>
+                                <th class="p-3.5 text-right">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="company-events-table" class="divide-y divide-slate-700/40">
@@ -436,7 +438,7 @@
                 </div>
             </div>
 
-            <!-- DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS (ADMIN VISION) -->
+            <!-- DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -464,7 +466,7 @@
                 </div>
             </div>
 
-            <!-- Fila de Auditoria de Solicitações de Vinculação -->
+            <!-- Fila de Auditoria de Solicitações -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden space-y-2">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -490,7 +492,7 @@
                 </div>
             </div>
 
-            <!-- Gestão de Usuários e Alteração Dinâmica de Papéis -->
+            <!-- Gestão de Usuários -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -528,7 +530,7 @@
                 <h3 class="text-xl font-bold text-white">Entrar na sua Conta</h3>
             </div>
 
-            <form onsubmit="handleLoginSubmit(event)" class="space-y-3">
+            <form action="javascript:void(0);" onsubmit="event.preventDefault(); handleLoginSubmit(event); return false;" class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">E-mail Cadastrado</label>
                     <input type="email" id="login-email" required placeholder="seu@email.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
@@ -562,7 +564,7 @@
                 <h3 class="text-xl font-bold text-white">Criar Conta no All Tickets</h3>
             </div>
 
-            <form onsubmit="handleRegisterSubmit(event)" class="space-y-3">
+            <form action="javascript:void(0);" onsubmit="event.preventDefault(); handleRegisterSubmit(event); return false;" class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Nome Completo</label>
                     <input type="text" id="reg-name" required placeholder="Ex: Marcos Santos" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
@@ -607,19 +609,16 @@
                 <p id="modal-event-stock" class="text-xs font-semibold text-slate-400">Estoque restante: -</p>
             </div>
             
-            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-800 pb-1">Resumo da Transação</span>
+            <!-- Resumo do Pedido -->
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5 text-xs">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block border-b border-slate-800 pb-1.5">Resumo do Pedido</span>
                 <div class="flex justify-between text-slate-300">
                     <span>Preço do Ingresso:</span>
-                    <span id="split-unit-price" class="font-bold text-white">R$ 0,00</span>
+                    <span id="clean-unit-price" class="font-bold text-white">R$ 0,00</span>
                 </div>
-                <div class="flex justify-between text-slate-400">
-                    <span>Repasse Produtor (80%):</span>
-                    <span id="split-company-share" class="font-semibold text-slate-300">R$ 0,00</span>
-                </div>
-                <div class="flex justify-between text-slate-400">
-                    <span>Taxa All Tickets (20%):</span>
-                    <span id="split-platform-share" class="font-semibold text-amber-400">R$ 0,00</span>
+                <div class="flex justify-between items-center text-sm border-t border-slate-800/80 pt-2 font-bold">
+                    <span class="text-white">Total a Pagar:</span>
+                    <span id="clean-total-price" class="text-brand-400 text-base font-extrabold">R$ 0,00</span>
                 </div>
             </div>
 
@@ -697,7 +696,7 @@
                 <h3 class="text-xl font-bold text-white">Solicitar Vinculação Empresarial</h3>
             </div>
             
-            <form onsubmit="submitCompanyBindingRequest(event)" class="space-y-3">
+            <form action="javascript:void(0);" onsubmit="event.preventDefault(); submitCompanyBindingRequest(event); return false;" class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Razão Social / Nome da Empresa</label>
                     <input type="text" id="req-company-name" required placeholder="Ex: Maceió Sounds Produções" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
@@ -734,7 +733,7 @@
                 <h3 class="text-xl font-bold text-white">Publicar Novo Evento</h3>
             </div>
             
-            <form id="form-create-event" onsubmit="createEvent(event)" class="space-y-3">
+            <form id="form-create-event" action="javascript:void(0);" onsubmit="event.preventDefault(); handleCreateEvent(event); return false;" class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Título da Atração</label>
                     <input type="text" id="new-title" required placeholder="Ex: Festival de Verão 2026" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
@@ -753,9 +752,15 @@
                         <input type="number" id="new-price" step="0.01" min="0" required placeholder="100.00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Estoque Inicial de Ingressos</label>
-                    <input type="number" id="new-stock" min="1" required placeholder="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Estoque Inicial de Ingressos</label>
+                        <input type="number" id="new-stock" min="1" required placeholder="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">URL da Foto do Evento (Opcional)</label>
+                        <input type="text" id="new-img" placeholder="https://exemplo.com/imagem.jpg" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
                 </div>
                 <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
                     Publicar Atração Imediatamente
@@ -764,7 +769,55 @@
         </div>
     </div>
 
-    <!-- MODAL 7: AVISO E NOTIFICAÇÃO PERSONALIZADA (SEM ALERTS NATIVOS) -->
+    <!-- MODAL 7: EDITAR EVENTO (EMPRESA) -->
+    <div id="modal-editar-evento" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('modal-editar-evento')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div>
+                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Edição de Atração</span>
+                <h3 class="text-xl font-bold text-white">Editar Evento</h3>
+            </div>
+            
+            <form id="form-edit-event" action="javascript:void(0);" onsubmit="event.preventDefault(); saveEditedEvent(event); return false;" class="space-y-3">
+                <input type="hidden" id="edit-evt-id">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Título da Atração</label>
+                    <input type="text" id="edit-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Categoria</label>
+                        <select id="edit-cat" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                            <option value="Shows e Festivais">Shows e Festivais</option>
+                            <option value="Teatro e Cultura">Teatro e Cultura</option>
+                            <option value="Festas e Nightlife">Festas e Nightlife</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Preço Unitário (R$)</label>
+                        <input type="number" id="edit-price" step="0.01" min="0" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Estoque de Ingressos</label>
+                        <input type="number" id="edit-stock" min="0" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">URL da Foto do Evento</label>
+                        <input type="text" id="edit-img" placeholder="https://exemplo.com/imagem.jpg" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
+                    Salvar Alterações
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 8: AVISO E NOTIFICAÇÃO PERSONALIZADA -->
     <div id="modal-custom-notice" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
             <div id="notice-icon-container" class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl">
@@ -782,14 +835,63 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATIONS (POPUP CANTINHO DA TELA) -->
+    <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- JAVASCRIPT PRINCIPAL E BANCO DE DADOS LOCALSTORAGE PERSISTENTE -->
+    <!-- JAVASCRIPT PRINCIPAL -->
     <script>
-        const DB_STORAGE_KEY = 'ALL_TICKETS_DATABASE_V1';
+        // Global Error Handler para prevenir travamentos
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Erro de Execução:', msg, 'em', url, 'linha:', lineNo);
+            return true;
+        };
 
-        // Dados padrão de demonstração para inicialização
+        const DB_STORAGE_KEY = 'ALL_TICKETS_DATABASE_V1';
+        
+        // Imagem Padrão SVG embutida (Segura e sem falha de rede/CORS)
+        const FALLBACK_EVENT_IMAGE = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'%3E%3Crect width='100%25' height='100%25' fill='%231e293b'/%3E%3Crect x='10' y='10' width='580' height='380' rx='16' fill='none' stroke='%23334155' stroke-width='2'/%3E%3Ccircle cx='300' cy='170' r='45' fill='%230f172a' stroke='%2322c55e' stroke-width='3'/%3E%3Cpath d='M285 170 L315 170 M300 155 L300 185' stroke='%2322c55e' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='50%25' y='260' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' font-weight='bold' fill='%23cbd5e1'%3EAll Tickets%3C/text%3E%3Ctext x='50%25' y='290' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='13' font-weight='600' fill='%2364748b'%3EImagem Padr%C3%A3o do Sistema%3C/text%3E%3C/svg%3E";
+
+        // Estado global do banco de dados
+        const usersDatabase = [];
+        const eventsDatabase = [];
+        const ticketsDatabase = [];
+        const financialTransactions = [];
+        const companyRequests = [];
+
+        let currentUser = null; // null = Deslogado
+        let selectedEventForPurchase = null;
+        let currentCategoryFilter = 'todos';
+
+        // Escapar HTML para renderização segura
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Tratamento simples para quando a imagem for incompatível ou falhar
+        function handleImageError(imgElem, evtId) {
+            if (!imgElem) return;
+            imgElem.onerror = null;
+            imgElem.src = FALLBACK_EVENT_IMAGE;
+
+            const msgElem = document.getElementById(`img-msg-${evtId}`);
+            if (msgElem) {
+                msgElem.classList.remove('hidden');
+            }
+
+            const evt = eventsDatabase.find(e => e.id === evtId);
+            if (evt && !evt.has_img_error) {
+                evt.has_img_error = true;
+                saveDatabase();
+            }
+        }
+
+        // Dados iniciais padrão
         const defaultInitialData = {
             users: [
                 { id: 'usr-1', name: 'Lucas Silva', email: 'lucas.silva@email.com', password: '123', role: 'PUBLICO', initials: 'LS' },
@@ -797,9 +899,9 @@
                 { id: 'usr-3', name: 'Suporte All Tickets', email: 'admin@alltickets.com.br', password: '123', role: 'ADMIN', initials: 'AT' }
             ],
             events: [
-                { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
-                { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
-                { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+                { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80', has_img_error: false },
+                { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80', has_img_error: false },
+                { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80', has_img_error: false }
             ],
             tickets: [
                 { id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', user_id: 'usr-1', event_id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', event_title: 'Maceió Summer Sounds 2026', price: 100.00, qr_hash: 'QR-A9F82B10C4', is_used: false, created_at: '2026-09-17T09:10:00Z' }
@@ -811,17 +913,7 @@
             sessionUserId: null
         };
 
-        // Arrays de estado mantidos em memória
-        const usersDatabase = [];
-        const eventsDatabase = [];
-        const ticketsDatabase = [];
-        const financialTransactions = [];
-        const companyRequests = [];
-
-        let currentUser = null; // null = Deslogado
-        let selectedEventForPurchase = null;
-
-        // Função de carregamento transparente do LocalStorage
+        // Carregar banco de dados com proteção
         function loadDatabase() {
             try {
                 const stored = localStorage.getItem(DB_STORAGE_KEY);
@@ -852,14 +944,14 @@
                     }
                 }
             } catch (err) {
-                console.error("Erro ao ler banco de dados local:", err);
+                console.warn("Erro ao ler LocalStorage:", err);
             }
 
             resetStateToDefaultData();
             saveDatabase();
         }
 
-        // Salvamento no LocalStorage
+        // Salvar banco de dados com proteção
         function saveDatabase() {
             try {
                 const payload = {
@@ -872,7 +964,7 @@
                 };
                 localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(payload));
             } catch (err) {
-                console.error("Erro ao salvar dados localmente:", err);
+                console.warn("Erro ao salvar LocalStorage:", err);
             }
         }
 
@@ -893,15 +985,15 @@
             currentUser = null;
         }
 
-        // Inicialização da Aplicação
+        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             loadDatabase();
-            renderEvents(eventsDatabase);
+            applyEventFilters();
             updateAuthState();
             navigateTo('home');
         });
 
-        // Alternar Sessão Rapidamente via Barra Superior (Troca de Contas)
+        // Alternar perfil rapidamente
         function switchQuickUser(userId) {
             if (userId === 'deslogado') {
                 currentUser = null;
@@ -910,19 +1002,18 @@
             }
             
             saveDatabase();
-            // REDIRECIONAMENTO OBRIGATÓRIO PARA A TELA INICIAL (FEED DE EVENTOS)
             navigateTo('home');
             updateAuthState();
             showToast(currentUser ? `Autenticado como ${currentUser.name} [${currentUser.role}]` : 'Sessão encerrada.');
         }
 
-        // Atualizar Estado de Autenticação e Regras RBAC
+        // Atualizar perfil e permissões RBAC
         function updateAuthState() {
             const authContainer = document.getElementById('auth-buttons-container');
             const mobAuthContainer = document.getElementById('mobile-auth-container');
             const currentRole = currentUser ? currentUser.role : 'DESLOGADO';
 
-            // Destaque nos Botões da Barra Superior
+            // Destaque nos botões do topo
             ['deslogado', 'usr-1', 'usr-2', 'usr-3'].forEach(id => {
                 const btn = document.getElementById(`btn-quick-${id}`);
                 if (btn) {
@@ -933,56 +1024,76 @@
                 }
             });
 
-            // Banner Informativo Superior
+            // Status da conta
             const userTitle = document.getElementById('current-user-title');
             const userDesc = document.getElementById('current-user-desc');
 
-            if (!currentUser) {
-                userTitle.textContent = 'Visitante (Não autenticado)';
-                userDesc.textContent = 'Navegação restrita. Faça login ou cadastre-se para adquirir ingressos ou acessar painéis empresariais.';
+            if (userTitle && userDesc) {
+                if (!currentUser) {
+                    userTitle.textContent = 'Visitante (Não autenticado)';
+                    userDesc.innerHTML = 'Navegação restrita. Faça login ou cadastre-se para comprar ingressos e gerenciar seus dados.';
 
-                authContainer.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <button onclick="openModal('modal-login')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition">
-                            Entrar
-                        </button>
-                        <button onclick="openModal('modal-cadastro')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition shadow-md shadow-brand-500/10">
-                            Cadastrar
-                        </button>
-                    </div>
-                `;
-                mobAuthContainer.innerHTML = `
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openModal('modal-login'); toggleMobileMenu()" class="py-2 bg-slate-800 text-white font-bold rounded-lg text-center text-xs">
-                            Entrar
-                        </button>
-                        <button onclick="openModal('modal-cadastro'); toggleMobileMenu()" class="py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-xs">
-                            Cadastrar
-                        </button>
-                    </div>
-                `;
-            } else {
-                userTitle.textContent = `${currentUser.name} (${currentUser.email})`;
-                userDesc.textContent = `Sessão ativa como [${currentUser.role}]. Permissões atualizadas em tempo real.`;
+                    if (authContainer) {
+                        authContainer.innerHTML = `
+                            <div class="flex items-center gap-2">
+                                <button onclick="openModal('modal-login')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition">
+                                    Entrar
+                                </button>
+                                <button onclick="openModal('modal-cadastro')" class="px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs transition shadow-md shadow-brand-500/10">
+                                    Cadastrar
+                                </button>
+                            </div>
+                        `;
+                    }
+                    if (mobAuthContainer) {
+                        mobAuthContainer.innerHTML = `
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('modal-login'); toggleMobileMenu()" class="py-2 bg-slate-800 text-white font-bold rounded-lg text-center text-xs">
+                                    Entrar
+                                </button>
+                                <button onclick="openModal('modal-cadastro'); toggleMobileMenu()" class="py-2 bg-brand-500 text-slate-950 font-bold rounded-lg text-center text-xs">
+                                    Cadastrar
+                                </button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    userTitle.textContent = `${currentUser.name} (${currentUser.email})`;
+                    
+                    let badgeStyle = 'bg-slate-800 text-slate-400 border border-slate-700';
+                    if (currentUser.role === 'ADMIN') {
+                        badgeStyle = 'bg-amber-500/15 text-amber-400 border border-amber-500/30';
+                    } else if (currentUser.role === 'EMPRESA') {
+                        badgeStyle = 'bg-sky-500/15 text-sky-400 border border-sky-500/30';
+                    } else if (currentUser.role === 'PUBLICO') {
+                        badgeStyle = 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+                    }
 
-                authContainer.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-brand-400 font-bold hidden sm:inline px-2.5 py-1 bg-brand-500/10 rounded-lg border border-brand-500/20">
-                            ${currentUser.name}
-                        </span>
-                        <button onclick="logout()" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
-                            <i class="fa-solid fa-right-from-bracket"></i> Sair
-                        </button>
-                    </div>
-                `;
-                mobAuthContainer.innerHTML = `
-                    <button onclick="logout(); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-xs">
-                        Sair da Conta (${currentUser.name})
-                    </button>
-                `;
+                    userDesc.innerHTML = `Sessão ativa como <span class="inline-block px-2 py-0.5 rounded text-xs font-extrabold uppercase ${badgeStyle}">${currentUser.role}</span>.`;
+
+                    if (authContainer) {
+                        authContainer.innerHTML = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-brand-400 font-bold hidden sm:inline px-2.5 py-1 bg-brand-500/10 rounded-lg border border-brand-500/20">
+                                    ${escapeHtml(currentUser.name)}
+                                </span>
+                                <button onclick="logout()" class="px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-500/10 font-bold text-xs transition flex items-center gap-1">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                                </button>
+                            </div>
+                        `;
+                    }
+                    if (mobAuthContainer) {
+                        mobAuthContainer.innerHTML = `
+                            <button onclick="logout(); toggleMobileMenu()" class="w-full py-2 bg-rose-500/20 text-rose-400 font-bold rounded-lg text-center text-xs">
+                                Sair da Conta (${escapeHtml(currentUser.name)})
+                            </button>
+                        `;
+                    }
+                }
             }
 
-            // REGRAS RIGOROSAS DE EXIBIÇÃO NO MENU SUPERIOR (RBAC STRICT)
+            // Exibição de menus por papel
             const navGroupUser = document.getElementById('nav-group-user');
             const navEmpresa = document.getElementById('nav-empresa');
             const navAdm = document.getElementById('nav-adm');
@@ -992,45 +1103,42 @@
             const partnerRequestSection = document.getElementById('partner-request-section');
 
             if (!currentUser) {
-                navGroupUser.classList.add('opacity-40');
-                navEmpresa.classList.add('hidden');
-                navAdm.classList.add('hidden');
-                mobEmpresa.classList.add('hidden');
-                mobAdm.classList.add('hidden');
-                heroVirarEmpresaBtn.classList.remove('hidden');
-                partnerRequestSection.classList.remove('hidden');
+                if (navGroupUser) navGroupUser.classList.add('opacity-40');
+                if (navEmpresa) navEmpresa.classList.add('hidden');
+                if (navAdm) navAdm.classList.add('hidden');
+                if (mobEmpresa) mobEmpresa.classList.add('hidden');
+                if (mobAdm) mobAdm.classList.add('hidden');
+                if (heroVirarEmpresaBtn) heroVirarEmpresaBtn.classList.remove('hidden');
+                if (partnerRequestSection) partnerRequestSection.classList.remove('hidden');
             } else {
-                navGroupUser.classList.remove('opacity-40');
+                if (navGroupUser) navGroupUser.classList.remove('opacity-40');
 
-                // Módulo Empresa: Apenas visível para perfil EMPRESA (Oculto na navbar para ADMIN)
                 if (currentRole === 'EMPRESA') {
-                    navEmpresa.classList.remove('hidden');
-                    mobEmpresa.classList.remove('hidden');
-                    heroVirarEmpresaBtn.classList.add('hidden');
-                    partnerRequestSection.classList.add('hidden');
+                    if (navEmpresa) navEmpresa.classList.remove('hidden');
+                    if (mobEmpresa) mobEmpresa.classList.remove('hidden');
+                    if (heroVirarEmpresaBtn) heroVirarEmpresaBtn.classList.add('hidden');
+                    if (partnerRequestSection) partnerRequestSection.classList.add('hidden');
                 } else {
-                    navEmpresa.classList.add('hidden');
-                    mobEmpresa.classList.add('hidden');
+                    if (navEmpresa) navEmpresa.classList.add('hidden');
+                    if (mobEmpresa) mobEmpresa.classList.add('hidden');
                     if (currentRole === 'PUBLICO') {
-                        heroVirarEmpresaBtn.classList.remove('hidden');
-                        partnerRequestSection.classList.remove('hidden');
-                    } else { // ADMIN
-                        heroVirarEmpresaBtn.classList.add('hidden');
-                        partnerRequestSection.classList.add('hidden');
+                        if (heroVirarEmpresaBtn) heroVirarEmpresaBtn.classList.remove('hidden');
+                        if (partnerRequestSection) partnerRequestSection.classList.remove('hidden');
+                    } else {
+                        if (heroVirarEmpresaBtn) heroVirarEmpresaBtn.classList.add('hidden');
+                        if (partnerRequestSection) partnerRequestSection.classList.add('hidden');
                     }
                 }
 
-                // Módulo Admin: Visível exclusivamente para perfil ADMIN
                 if (currentRole === 'ADMIN') {
-                    navAdm.classList.remove('hidden');
-                    mobAdm.classList.remove('hidden');
+                    if (navAdm) navAdm.classList.remove('hidden');
+                    if (mobAdm) mobAdm.classList.remove('hidden');
                 } else {
-                    navAdm.classList.add('hidden');
-                    mobAdm.classList.add('hidden');
+                    if (navAdm) navAdm.classList.add('hidden');
+                    if (mobAdm) mobAdm.classList.add('hidden');
                 }
             }
 
-            // Atualizar dados de abas ativas
             renderProfileData();
             renderMyTickets();
             renderCompanyDashboard();
@@ -1038,13 +1146,12 @@
             renderUserRequests();
         }
 
-        // Navegação entre Abas do Sistema
+        // Navegação de abas
         function navigateTo(tabName) {
-            // Verificação de Acesso RBAC
             if (!currentUser && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
                 showNoticeModal(
-                    '401 Unauthorized', 
-                    'Efetue o login para adquirir ingressos ou acessar áreas restritas do sistema.', 
+                    'Faça Login para Continuar', 
+                    'Para garantir a segurança dos seus ingressos, faça login ou crie sua conta antes de prosseguir.', 
                     'lock', 
                     [
                         { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
@@ -1079,51 +1186,114 @@
             }
         }
 
-        // Renderizar Perfil Minha Conta
         function renderProfileData() {
             if (!currentUser) return;
 
-            document.getElementById('profile-name').textContent = currentUser.name;
-            document.getElementById('profile-email').textContent = currentUser.email;
-            document.getElementById('profile-badge').textContent = `Papel: ${currentUser.role}`;
-            document.getElementById('profile-avatar-initials').textContent = currentUser.initials || 'U';
+            const pName = document.getElementById('profile-name');
+            const pEmail = document.getElementById('profile-email');
+            const pBadge = document.getElementById('profile-badge');
+            const pInitials = document.getElementById('profile-avatar-initials');
+            const inpName = document.getElementById('input-name');
+            const inpEmail = document.getElementById('input-email');
 
-            document.getElementById('input-name').value = currentUser.name;
-            document.getElementById('input-email').value = currentUser.email;
+            if (pName) pName.textContent = currentUser.name;
+            if (pEmail) pEmail.textContent = currentUser.email;
+            if (pBadge) pBadge.textContent = `Papel: ${currentUser.role}`;
+            if (pInitials) pInitials.textContent = currentUser.initials || 'U';
+
+            if (inpName) inpName.value = currentUser.name;
+            if (inpEmail) inpEmail.value = currentUser.email;
+        }
+
+        function filterCategory(cat, btnElement) {
+            currentCategoryFilter = cat;
+
+            const buttons = document.querySelectorAll('#category-buttons-container .cat-btn');
+            buttons.forEach(btn => {
+                btn.className = 'cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition';
+            });
+            if (btnElement) {
+                btnElement.className = 'cat-btn px-4 py-2 bg-brand-500 text-slate-950 font-bold rounded-xl text-xs whitespace-nowrap transition shadow-lg shadow-brand-500/20';
+            }
+
+            applyEventFilters();
+        }
+
+        function filterEvents() {
+            applyEventFilters();
+        }
+
+        function applyEventFilters() {
+            const searchInput = document.getElementById('event-search');
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            let filtered = eventsDatabase;
+
+            if (currentCategoryFilter && currentCategoryFilter !== 'todos') {
+                filtered = filtered.filter(e => e.category === currentCategoryFilter);
+            }
+
+            if (query) {
+                filtered = filtered.filter(e => e.title.toLowerCase().includes(query));
+            }
+
+            renderEvents(filtered);
         }
 
         // Renderizar Vitrine de Eventos
         function renderEvents(events) {
             const grid = document.getElementById('events-grid');
-            document.getElementById('event-count').textContent = `Exibindo ${events.length} evento(s)`;
+            if (!grid) return;
+            const countElem = document.getElementById('event-count');
+            if (countElem) countElem.textContent = `Exibindo ${events.length} evento(s)`;
             grid.innerHTML = '';
+
+            if (events.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-slate-800/30 border border-slate-700/50 rounded-2xl space-y-2">
+                        <i class="fa-solid fa-calendar-xmark text-4xl text-slate-500"></i>
+                        <p class="text-slate-400 text-sm font-medium">Nenhum evento encontrado para os filtros selecionados.</p>
+                    </div>
+                `;
+                return;
+            }
 
             events.forEach(evt => {
                 const companyOwner = usersDatabase.find(u => u.id === evt.company_id);
                 const companyName = companyOwner ? companyOwner.name : 'Produtora Parceira';
                 const isOutOfStock = evt.stock <= 0;
+                
+                const hasError = evt.has_img_error || !evt.img;
+                const displayImg = evt.img || FALLBACK_EVENT_IMAGE;
 
                 const card = document.createElement('div');
                 card.className = 'bg-slate-800/60 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-slate-600 transition';
                 card.innerHTML = `
                     <div>
-                        <div class="h-48 overflow-hidden relative">
-                            <img src="${evt.img}" alt="${evt.title}" class="w-full h-full object-cover">
+                        <div class="h-48 overflow-hidden relative bg-slate-950">
+                            <img src="${escapeHtml(displayImg)}" alt="${escapeHtml(evt.title)}" referrerpolicy="no-referrer" onerror="handleImageError(this, '${evt.id}')" class="w-full h-full object-cover">
                             <span class="absolute top-3 right-3 px-3 py-1 bg-slate-950/80 backdrop-blur-md text-brand-400 border border-brand-500/30 rounded-full text-[10px] font-bold uppercase">
-                                R$ ${evt.price.toFixed(2)}
+                                R$ ${Number(evt.price).toFixed(2)}
                             </span>
                             <span class="absolute top-3 left-3 px-2.5 py-1 ${isOutOfStock ? 'bg-rose-500/90' : 'bg-slate-900/80'} text-white rounded-lg text-[10px] font-bold">
                                 ${isOutOfStock ? 'Esgotado' : `Estoque: ${evt.stock}`}
                             </span>
                         </div>
-                        <div class="p-5 space-y-3">
-                            <span class="text-[10px] uppercase font-extrabold tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">${evt.category}</span>
-                            <h3 class="font-bold text-white text-base leading-snug">${evt.title}</h3>
-                            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                        <div class="p-5 space-y-2">
+                            <span class="text-[10px] uppercase font-extrabold tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">${escapeHtml(evt.category)}</span>
+                            <h3 class="font-bold text-white text-base leading-snug">${escapeHtml(evt.title)}</h3>
+                            
+                            <!-- MENSAGEM SIMPLES DE IMAGEM INCOMPATÍVEL -->
+                            <div id="img-msg-${evt.id}" class="${hasError ? '' : 'hidden'} text-xs text-amber-400 font-medium flex items-center gap-1.5 mt-1">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Imagem não compatível (exibindo imagem padrão)</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
                                 <button onclick="likeEvent('${evt.id}')" class="flex items-center gap-1.5 text-rose-400 hover:text-rose-300 font-semibold bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20 transition">
-                                    <i class="fa-solid fa-heart"></i> ${evt.likes_count} Curtidas
+                                    <i class="fa-solid fa-heart"></i> ${evt.likes_count || 0} Curtidas
                                 </button>
-                                <span class="truncate max-w-[150px]" title="${companyName}"><i class="fa-solid fa-building text-slate-500 mr-1"></i> ${companyName}</span>
+                                <span class="truncate max-w-[140px]" title="${escapeHtml(companyName)}"><i class="fa-solid fa-building text-slate-500 mr-1"></i> ${escapeHtml(companyName)}</span>
                             </div>
                         </div>
                     </div>
@@ -1137,38 +1307,23 @@
             });
         }
 
+        // Curtir evento
         function likeEvent(evtId) {
             const evt = eventsDatabase.find(e => e.id === evtId);
             if (evt) {
-                evt.likes_count += 1;
+                evt.likes_count = (evt.likes_count || 0) + 1;
                 saveDatabase();
-                renderEvents(eventsDatabase);
+                applyEventFilters();
                 renderCompanyDashboard();
-                renderAdminTables();
             }
         }
 
-        function filterEvents() {
-            const query = document.getElementById('event-search').value.toLowerCase();
-            const filtered = eventsDatabase.filter(e => e.title.toLowerCase().includes(query));
-            renderEvents(filtered);
-        }
-
-        function filterCategory(cat) {
-            if (cat === 'todos') {
-                renderEvents(eventsDatabase);
-            } else {
-                const filtered = eventsDatabase.filter(e => e.category === cat);
-                renderEvents(filtered);
-            }
-        }
-
-        // Abrir Modal de Checkout de Compra
+        // Abrir Modal de Checkout
         function openBuyModal(eventId) {
             if (!currentUser) {
                 showNoticeModal(
-                    '401 Unauthorized', 
-                    'Efetue o login para adquirir ingressos.', 
+                    'Faça Login para Continuar', 
+                    'Para garantir a segurança dos seus ingressos, faça login ou crie sua conta antes de prosseguir com a compra.', 
                     'lock', 
                     [
                         { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
@@ -1180,25 +1335,27 @@
 
             selectedEventForPurchase = eventsDatabase.find(e => e.id === eventId);
             
-            if (selectedEventForPurchase.stock <= 0) {
+            if (!selectedEventForPurchase || selectedEventForPurchase.stock <= 0) {
                 showNoticeModal('Estoque Esgotado', 'Ingressos esgotados para este evento.');
                 return;
             }
 
             const total = selectedEventForPurchase.price;
-            const companyShare = total * 0.80;
-            const platformShare = total * 0.20;
 
-            document.getElementById('modal-event-title').textContent = selectedEventForPurchase.title;
-            document.getElementById('modal-event-stock').textContent = `Estoque disponível: ${selectedEventForPurchase.stock} unidades`;
-            document.getElementById('split-unit-price').textContent = `R$ ${total.toFixed(2)}`;
-            document.getElementById('split-company-share').textContent = `R$ ${companyShare.toFixed(2)}`;
-            document.getElementById('split-platform-share').textContent = `R$ ${platformShare.toFixed(2)}`;
+            const titleElem = document.getElementById('modal-event-title');
+            const stockElem = document.getElementById('modal-event-stock');
+            const unitPriceElem = document.getElementById('clean-unit-price');
+            const totalPriceElem = document.getElementById('clean-total-price');
+
+            if (titleElem) titleElem.textContent = selectedEventForPurchase.title;
+            if (stockElem) stockElem.textContent = `Estoque disponível: ${selectedEventForPurchase.stock} unidades`;
+            if (unitPriceElem) unitPriceElem.textContent = `R$ ${total.toFixed(2)}`;
+            if (totalPriceElem) totalPriceElem.textContent = `R$ ${total.toFixed(2)}`;
 
             openModal('modal-comprar');
         }
 
-        // Confirmar Execução da Compra
+        // Confirmar Compra
         function executePurchase() {
             if (!selectedEventForPurchase) return;
 
@@ -1208,7 +1365,6 @@
                 return;
             }
 
-            // Decrementar Estoque
             selectedEventForPurchase.stock -= 1;
 
             const ticketCode = 'QR-' + Math.random().toString(16).substring(2, 10).toUpperCase();
@@ -1238,27 +1394,32 @@
             financialTransactions.push(newTransaction);
             saveDatabase();
 
-            renderEvents(eventsDatabase);
+            applyEventFilters();
             renderMyTickets();
             renderCompanyDashboard();
             renderAdminTables();
 
             closeModal('modal-comprar');
 
-            // Exibir Tela de "Compra Finalizada Sucesso"
-            document.getElementById('success-event-title').textContent = selectedEventForPurchase.title;
-            document.getElementById('success-ticket-code').textContent = ticketCode;
-            document.getElementById('success-event-price').textContent = `R$ ${total.toFixed(2)}`;
+            const succTitle = document.getElementById('success-event-title');
+            const succCode = document.getElementById('success-ticket-code');
+            const succPrice = document.getElementById('success-event-price');
+
+            if (succTitle) succTitle.textContent = selectedEventForPurchase.title;
+            if (succCode) succCode.textContent = ticketCode;
+            if (succPrice) succPrice.textContent = `R$ ${total.toFixed(2)}`;
             
             openModal('modal-compra-sucesso');
         }
 
-        // Renderizar Ingressos Comprados (Carteira Digital sem QR Code)
+        // Renderizar Ingressos Comprados
         function renderMyTickets() {
             const container = document.getElementById('tickets-container');
+            if (!container) return;
             const myTickets = currentUser ? ticketsDatabase.filter(t => t.user_id === currentUser.id) : [];
             
-            document.getElementById('profile-tickets-count').textContent = myTickets.length;
+            const profileTicketsElem = document.getElementById('profile-tickets-count');
+            if (profileTicketsElem) profileTicketsElem.textContent = myTickets.length;
             container.innerHTML = '';
 
             if (myTickets.length === 0) {
@@ -1276,8 +1437,8 @@
                 item.className = `bg-slate-800/60 border ${ticket.is_used ? 'border-rose-500/40 bg-rose-950/10' : 'border-slate-700/60'} p-5 rounded-2xl flex items-center justify-between gap-4`;
                 item.innerHTML = `
                     <div class="space-y-1">
-                        <span class="text-[11px] font-mono font-extrabold ${ticket.is_used ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' : 'text-brand-500 bg-brand-500/10 border-brand-500/20'} px-2.5 py-1 rounded border">${ticket.qr_hash}</span>
-                        <h4 class="font-bold text-white text-sm pt-1">${ticket.event_title}</h4>
+                        <span class="text-[11px] font-mono font-extrabold ${ticket.is_used ? 'text-rose-400 bg-rose-500/10 border-rose-500/20' : 'text-brand-500 bg-brand-500/10 border-brand-500/20'} px-2.5 py-1 rounded border">${escapeHtml(ticket.qr_hash)}</span>
+                        <h4 class="font-bold text-white text-sm pt-1">${escapeHtml(ticket.event_title)}</h4>
                         <p class="text-xs text-slate-400">Status: <strong class="${ticket.is_used ? 'text-rose-400' : 'text-brand-400'}">${ticket.is_used ? 'UTILIZADO (NA PORTARIA)' : 'ATIVO (VÁLIDO)'}</strong></p>
                     </div>
                     <button onclick="copyToClipboard('${ticket.qr_hash}')" class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs rounded-xl flex items-center gap-2 transition whitespace-nowrap">
@@ -1289,19 +1450,42 @@
         }
 
         function copyToClipboard(text) {
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            showToast(`Código ${text} copiado para a área de transferência!`);
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast(`Código ${text} copiado para a área de transferência!`);
+                    }).catch(() => fallbackCopy(text));
+                } else {
+                    fallbackCopy(text);
+                }
+            } catch (err) {
+                fallbackCopy(text);
+            }
         }
 
-        // Validar Portaria por Código Digitado
+        function fallbackCopy(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            el.style.position = 'fixed';
+            el.style.opacity = '0';
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand('copy');
+                showToast(`Código ${text} copiado para a área de transferência!`);
+            } catch (err) {
+                showToast(`Código: ${text}`);
+            }
+            document.body.removeChild(el);
+        }
+
+        // Validar Portaria por Código
         function validateTicketGate() {
-            const inputCode = document.getElementById('input-gate-hash').value.trim().toUpperCase();
+            const inputElem = document.getElementById('input-gate-hash');
+            const inputCode = inputElem ? inputElem.value.trim().toUpperCase() : '';
             const resultBox = document.getElementById('gate-result-box');
+            if (!resultBox) return;
+
             resultBox.className = 'hidden p-4 rounded-xl border text-sm font-medium';
 
             if (!inputCode) {
@@ -1329,185 +1513,146 @@
             saveDatabase();
 
             resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-emerald-500/20 border-emerald-500/40 text-emerald-300';
-            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>Entrada Liberada:</strong> Bilhete "${ticket.event_title}" validado e queimado com sucesso!`;
+            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>Entrada Liberada:</strong> Bilhete "${escapeHtml(ticket.event_title)}" validado e queimado com sucesso!`;
             resultBox.classList.remove('hidden');
 
             renderMyTickets();
         }
 
-        // Publicar Novo Evento (Empresa)
-        function createEvent(e) {
-            e.preventDefault();
+        // Publicar Evento (Empresa)
+        function handleCreateEvent(e) {
+            if (e) e.preventDefault();
 
-            if (!currentUser || currentUser.role !== 'EMPRESA') {
-                showNoticeModal('Acesso Negado', 'Somente produtoras empresariais podem publicar atrações.');
-                return;
-            }
+            try {
+                if (!currentUser || currentUser.role !== 'EMPRESA') {
+                    showNoticeModal('Acesso Negado', 'Somente produtoras empresariais podem publicar atrações.');
+                    return false;
+                }
 
-            const title = document.getElementById('new-title').value.trim();
-            const cat = document.getElementById('new-cat').value;
-            const price = parseFloat(document.getElementById('new-price').value);
-            const stock = parseInt(document.getElementById('new-stock').value);
+                const title = document.getElementById('new-title').value.trim();
+                const cat = document.getElementById('new-cat').value;
+                const price = parseFloat(document.getElementById('new-price').value);
+                const stock = parseInt(document.getElementById('new-stock').value);
+                let imgInput = document.getElementById('new-img').value.trim();
 
-            if (!title || isNaN(price) || isNaN(stock)) {
-                showNoticeModal('Dados Inválidos', 'Preencha todos os campos do evento corretamente.');
-                return;
-            }
+                if (!title || isNaN(price) || isNaN(stock)) {
+                    showNoticeModal('Dados Inválidos', 'Preencha todos os campos do evento corretamente.');
+                    return false;
+                }
 
-            const newEvt = {
-                id: `evt-${Date.now()}`,
-                company_id: currentUser.id,
-                title: title,
-                category: cat,
-                price: price,
-                stock: stock,
-                likes_count: 0,
-                img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80'
-            };
+                if (imgInput) {
+                    if (!imgInput.startsWith('http://') && !imgInput.startsWith('https://') && !imgInput.startsWith('data:')) {
+                        imgInput = 'https://' + imgInput;
+                    }
+                } else {
+                    imgInput = FALLBACK_EVENT_IMAGE;
+                }
 
-            eventsDatabase.unshift(newEvt);
-            saveDatabase();
+                const newEvt = {
+                    id: `evt-${Date.now()}`,
+                    company_id: currentUser.id,
+                    title: title,
+                    category: cat,
+                    price: price,
+                    stock: stock,
+                    likes_count: 0,
+                    img: imgInput,
+                    has_img_error: false
+                };
 
-            renderEvents(eventsDatabase);
-            renderCompanyDashboard();
-            renderAdminTables();
-
-            document.getElementById('form-create-event').reset();
-            closeModal('modal-novo-evento');
-
-            showNoticeModal('Atração Publicada!', `O evento "${title}" foi publicado com sucesso no catálogo.`, 'check');
-        }
-
-        // Processar Login
-        function handleLoginSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            const user = usersDatabase.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-
-            if (user) {
-                currentUser = user;
+                eventsDatabase.unshift(newEvt);
                 saveDatabase();
-                closeModal('modal-login');
-                // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
-                navigateTo('home');
-                updateAuthState();
-                showToast(`Bem-vindo de volta, ${user.name}!`);
-            } else {
-                showNoticeModal('Falha no Login', 'E-mail ou senha inválidos.');
+
+                applyEventFilters();
+                renderCompanyDashboard();
+                renderAdminTables();
+
+                const formElem = document.getElementById('form-create-event');
+                if (formElem) formElem.reset();
+                closeModal('modal-novo-evento');
+
+                showNoticeModal('Atração Publicada!', `O evento "${title}" foi publicado com sucesso no catálogo.`, 'check');
+            } catch (err) {
+                console.error("Erro ao publicar evento:", err);
             }
+            return false;
         }
 
-        // Processar Registro (Apenas PUBLICO)
-        function handleRegisterSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-password').value;
-            const role = 'PUBLICO';
+        // Abrir Modal de Edição de Evento
+        function openEditEventModal(evtId) {
+            const evt = eventsDatabase.find(e => e.id === evtId);
+            if (!evt) return;
 
-            if (usersDatabase.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-                showNoticeModal('E-mail em Uso', 'Este e-mail já está cadastrado.');
-                return;
+            const idField = document.getElementById('edit-evt-id');
+            const titleField = document.getElementById('edit-title');
+            const catField = document.getElementById('edit-cat');
+            const priceField = document.getElementById('edit-price');
+            const stockField = document.getElementById('edit-stock');
+            const imgField = document.getElementById('edit-img');
+
+            if (idField) idField.value = evt.id;
+            if (titleField) titleField.value = evt.title;
+            if (catField) catField.value = evt.category;
+            if (priceField) priceField.value = evt.price;
+            if (stockField) stockField.value = evt.stock;
+            if (imgField) imgField.value = (evt.img === FALLBACK_EVENT_IMAGE) ? '' : (evt.img || '');
+
+            openModal('modal-editar-evento');
+        }
+
+        function openEditModal(evtId) {
+            openEditEventModal(evtId);
+        }
+
+        // Salvar Edição do Evento
+        function saveEditedEvent(e) {
+            if (e) e.preventDefault();
+            try {
+                const evtId = document.getElementById('edit-evt-id').value;
+                const evt = eventsDatabase.find(e => e.id === evtId);
+                if (!evt) return false;
+
+                const title = document.getElementById('edit-title').value.trim();
+                const cat = document.getElementById('edit-cat').value;
+                const price = parseFloat(document.getElementById('edit-price').value);
+                const stock = parseInt(document.getElementById('edit-stock').value);
+                let imgInput = document.getElementById('edit-img').value.trim();
+
+                if (!title || isNaN(price) || isNaN(stock)) {
+                    showNoticeModal('Dados Inválidos', 'Preencha os campos corretamente.');
+                    return false;
+                }
+
+                if (imgInput) {
+                    if (!imgInput.startsWith('http://') && !imgInput.startsWith('https://') && !imgInput.startsWith('data:')) {
+                        imgInput = 'https://' + imgInput;
+                    }
+                } else {
+                    imgInput = FALLBACK_EVENT_IMAGE;
+                }
+
+                evt.title = title;
+                evt.category = cat;
+                evt.price = price;
+                evt.stock = stock;
+                evt.img = imgInput;
+                evt.has_img_error = false;
+
+                saveDatabase();
+
+                applyEventFilters();
+                renderCompanyDashboard();
+                renderAdminTables();
+
+                closeModal('modal-editar-evento');
+                showNoticeModal('Atração Atualizada!', `As alterações do evento "${title}" foram salvas.`, 'check');
+            } catch (err) {
+                console.error("Erro ao salvar edição:", err);
             }
-
-            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
-
-            const newUser = {
-                id: `usr-${Date.now()}`,
-                name: name,
-                email: email,
-                password: password,
-                role: role,
-                initials: initials
-            };
-
-            usersDatabase.push(newUser);
-            currentUser = newUser;
-            saveDatabase();
-
-            closeModal('modal-cadastro');
-            // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
-            navigateTo('home');
-            updateAuthState();
-            showNoticeModal('Conta Criada com Sucesso!', `Sua conta [PUBLICO] foi cadastrada e você já está autenticado!`, 'check');
+            return false;
         }
 
-        function logout() {
-            currentUser = null;
-            saveDatabase();
-            // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
-            navigateTo('home');
-            updateAuthState();
-            showToast('Você encerrou sua sessão.');
-        }
-
-        // Submeter Solicitação de Vinculação
-        function submitCompanyBindingRequest(e) {
-            e.preventDefault();
-            const name = document.getElementById('req-company-name').value;
-            const cnpj = document.getElementById('req-cnpj').value;
-            const email = document.getElementById('req-email').value;
-            const desc = document.getElementById('req-desc').value;
-
-            const newReq = {
-                id: `REQ-${Math.floor(100 + Math.random() * 900)}`,
-                company_name: name,
-                cnpj: cnpj,
-                email: email,
-                description: desc,
-                status: 'PENDENTE',
-                user_id: currentUser ? currentUser.id : 'usr-1'
-            };
-
-            companyRequests.push(newReq);
-            saveDatabase();
-
-            renderUserRequests();
-            renderAdminTables();
-            closeModal('modal-solicitar-vinculacao');
-            showNoticeModal('Proposta Enviada', 'Sua solicitação foi enviada para auditoria da administração.');
-        }
-
-        // Renderizar Solicitações Filtradas para o Usuário Logado
-        function renderUserRequests() {
-            const list = document.getElementById('user-requests-list');
-            if (!list) return;
-            list.innerHTML = '';
-
-            const userReqs = currentUser 
-                ? companyRequests.filter(r => r.user_id === currentUser.id || (r.email && r.email.toLowerCase() === currentUser.email.toLowerCase()))
-                : [];
-
-            if (userReqs.length === 0) {
-                list.innerHTML = `
-                    <div class="p-4 text-center text-xs text-slate-400 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-1">
-                        <i class="fa-solid fa-inbox text-slate-500 text-lg block mb-1"></i>
-                        <p class="font-medium text-slate-300">Nenhuma solicitação submetida até o momento.</p>
-                        <p class="text-[11px] text-slate-500">Clique em "Nova Proposta" para submeter o CNPJ da sua empresa.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            userReqs.forEach(req => {
-                const item = document.createElement('div');
-                item.className = 'p-3 bg-slate-900 border border-slate-700/60 rounded-xl flex items-center justify-between text-xs';
-                item.innerHTML = `
-                    <div>
-                        <strong class="text-white block">${req.company_name} (${req.cnpj})</strong>
-                        <span class="text-slate-400">${req.description}</span>
-                    </div>
-                    <span class="px-2.5 py-1 rounded font-bold uppercase ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">
-                        ${req.status}
-                    </span>
-                `;
-                list.appendChild(item);
-            });
-        }
-
-        // Renderizar Painel da Empresa Individual
+        // Renderizar Painel da Empresa
         function renderCompanyDashboard() {
             if (!currentUser || currentUser.role !== 'EMPRESA') return;
 
@@ -1521,29 +1666,36 @@
             const net = companyTxs.reduce((acc, t) => acc + t.company_share_80, 0);
 
             const elemSold = document.getElementById('company-kpi-sold');
-            if (elemSold) {
-                elemSold.textContent = companyTickets.length;
-                document.getElementById('company-kpi-gross').textContent = `R$ ${gross.toFixed(2)}`;
-                document.getElementById('company-kpi-net').textContent = `R$ ${net.toFixed(2)}`;
-            }
+            const elemGross = document.getElementById('company-kpi-gross');
+            const elemNet = document.getElementById('company-kpi-net');
+
+            if (elemSold) elemSold.textContent = companyTickets.length;
+            if (elemGross) elemGross.textContent = `R$ ${gross.toFixed(2)}`;
+            if (elemNet) elemNet.textContent = `R$ ${net.toFixed(2)}`;
 
             const table = document.getElementById('company-events-table');
             if (!table) return;
             table.innerHTML = '';
 
             if (companyEvents.length === 0) {
-                table.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Nenhum evento cadastrado para esta produtora.</td></tr>`;
+                table.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 text-xs">Nenhum evento cadastrado para esta produtora.</td></tr>`;
                 return;
             }
 
             companyEvents.forEach(evt => {
                 const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/40';
                 tr.innerHTML = `
-                    <td class="p-3.5 font-bold text-white">${evt.title}</td>
-                    <td class="p-3.5">${evt.category}</td>
-                    <td class="p-3.5">R$ ${evt.price.toFixed(2)}</td>
+                    <td class="p-3.5 font-bold text-white">${escapeHtml(evt.title)}</td>
+                    <td class="p-3.5">${escapeHtml(evt.category)}</td>
+                    <td class="p-3.5">R$ ${Number(evt.price).toFixed(2)}</td>
                     <td class="p-3.5 font-bold ${evt.stock <= 0 ? 'text-rose-400' : 'text-slate-200'}">${evt.stock} un.</td>
-                    <td class="p-3.5 text-rose-400 font-semibold"><i class="fa-solid fa-heart mr-1"></i> ${evt.likes_count}</td>
+                    <td class="p-3.5 text-rose-400 font-semibold"><i class="fa-solid fa-heart mr-1"></i> ${evt.likes_count || 0}</td>
+                    <td class="p-3.5 text-right">
+                        <button onclick="openEditEventModal('${evt.id}')" class="px-3 py-1.5 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded-lg text-xs transition inline-flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar
+                        </button>
+                    </td>
                 `;
                 table.appendChild(tr);
             });
@@ -1558,118 +1710,126 @@
             const commission = financialTransactions.reduce((acc, t) => acc + t.platform_share_20, 0);
 
             elemGmv.textContent = `R$ ${gmv.toFixed(2)}`;
-            document.getElementById('admin-kpi-commission').textContent = `R$ ${commission.toFixed(2)}`;
-            document.getElementById('admin-kpi-tickets').textContent = ticketsDatabase.length;
+            const commElem = document.getElementById('admin-kpi-commission');
+            const tktsElem = document.getElementById('admin-kpi-tickets');
+            if (commElem) commElem.textContent = `R$ ${commission.toFixed(2)}`;
+            if (tktsElem) tktsElem.textContent = ticketsDatabase.length;
 
-            // 1. DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS
             const companiesTable = document.getElementById('admin-companies-table');
             const companiesList = usersDatabase.filter(u => u.role === 'EMPRESA');
-            document.getElementById('admin-companies-count').textContent = `${companiesList.length} empresa(s)`;
-            companiesTable.innerHTML = '';
+            const compCountElem = document.getElementById('admin-companies-count');
+            if (compCountElem) compCountElem.textContent = `${companiesList.length} empresa(s)`;
 
-            if (companiesList.length === 0) {
-                companiesTable.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Nenhuma empresa parceira cadastrada.</td></tr>`;
-            } else {
-                companiesList.forEach(comp => {
-                    const compEvents = eventsDatabase.filter(e => e.company_id === comp.id);
-                    const compEventIds = compEvents.map(e => e.id);
-                    const compTickets = ticketsDatabase.filter(t => compEventIds.includes(t.event_id));
-                    const compTxs = financialTransactions.filter(f => compTickets.some(t => t.id === f.ticket_id) || f.company_id === comp.id);
-                    
-                    const grossRev = compTxs.reduce((acc, t) => acc + t.total_amount, 0);
-                    const platformCommission = compTxs.reduce((acc, t) => acc + t.platform_share_20, 0);
+            if (companiesTable) {
+                companiesTable.innerHTML = '';
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-3.5 font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-building text-sky-400"></i> ${comp.name}
-                        </td>
-                        <td class="p-3.5 text-slate-300">${comp.email}</td>
-                        <td class="p-3.5 text-center font-semibold text-slate-200">${compEvents.length}</td>
-                        <td class="p-3.5 text-center font-bold text-brand-400">${compTickets.length}</td>
-                        <td class="p-3.5 font-bold text-slate-100">R$ ${grossRev.toFixed(2)}</td>
-                        <td class="p-3.5 font-bold text-amber-400">R$ ${platformCommission.toFixed(2)}</td>
-                        <td class="p-3.5 text-right"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded font-bold uppercase text-[10px]">Ativa</span></td>
-                    `;
-                    companiesTable.appendChild(tr);
-                });
+                if (companiesList.length === 0) {
+                    companiesTable.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Nenhuma empresa parceira cadastrada.</td></tr>`;
+                } else {
+                    companiesList.forEach(comp => {
+                        const compEvents = eventsDatabase.filter(e => e.company_id === comp.id);
+                        const compEventIds = compEvents.map(e => e.id);
+                        const compTickets = ticketsDatabase.filter(t => compEventIds.includes(t.event_id));
+                        const compTxs = financialTransactions.filter(f => compTickets.some(t => t.id === f.ticket_id) || f.company_id === comp.id);
+                        
+                        const grossRev = compTxs.reduce((acc, t) => acc + t.total_amount, 0);
+                        const platformCommission = compTxs.reduce((acc, t) => acc + t.platform_share_20, 0);
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-building text-sky-400"></i> ${escapeHtml(comp.name)}
+                            </td>
+                            <td class="p-3.5 text-slate-300">${escapeHtml(comp.email)}</td>
+                            <td class="p-3.5 text-center font-semibold text-slate-200">${compEvents.length}</td>
+                            <td class="p-3.5 text-center font-bold text-brand-400">${compTickets.length}</td>
+                            <td class="p-3.5 font-bold text-slate-100">R$ ${grossRev.toFixed(2)}</td>
+                            <td class="p-3.5 font-bold text-amber-400">R$ ${platformCommission.toFixed(2)}</td>
+                            <td class="p-3.5 text-right"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 rounded font-bold uppercase text-[10px]">Ativa</span></td>
+                        `;
+                        companiesTable.appendChild(tr);
+                    });
+                }
             }
 
-            // 2. FILA DE AUDITORIA DE SOLICITAÇÕES
             const reqTable = document.getElementById('admin-requests-table');
             const pendingReqs = companyRequests.filter(r => r.status === 'PENDENTE');
-            document.getElementById('requests-count').textContent = `${pendingReqs.length} pendente(s)`;
-            reqTable.innerHTML = '';
+            const reqCountElem = document.getElementById('requests-count');
+            if (reqCountElem) reqCountElem.textContent = `${pendingReqs.length} pendente(s)`;
 
-            if (companyRequests.length === 0) {
-                reqTable.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Nenhuma solicitação de vinculação pendente na fila.</td></tr>`;
-            } else {
-                companyRequests.forEach(req => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-3.5 font-bold text-white">${req.company_name}</td>
-                        <td class="p-3.5 font-mono">${req.cnpj}</td>
-                        <td class="p-3.5">${req.email}</td>
-                        <td class="p-3.5"><span class="px-2 py-0.5 rounded font-bold ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">${req.status}</span></td>
-                        <td class="p-3.5 text-right space-x-2">
-                            ${req.status === 'PENDENTE' ? `
-                                <button onclick="approveCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400 transition">Aprovar & Promover</button>
-                                <button onclick="rejectCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30 transition">Rejeitar</button>
-                            ` : '<span class="text-slate-500">Concluído</span>'}
-                        </td>
-                    `;
-                    reqTable.appendChild(tr);
-                });
+            if (reqTable) {
+                reqTable.innerHTML = '';
+
+                if (companyRequests.length === 0) {
+                    reqTable.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Nenhuma solicitação de vinculação pendente na fila.</td></tr>`;
+                } else {
+                    companyRequests.forEach(req => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="p-3.5 font-bold text-white">${escapeHtml(req.company_name)}</td>
+                            <td class="p-3.5 font-mono">${escapeHtml(req.cnpj)}</td>
+                            <td class="p-3.5">${escapeHtml(req.email)}</td>
+                            <td class="p-3.5"><span class="px-2 py-0.5 rounded font-bold ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">${req.status}</span></td>
+                            <td class="p-3.5 text-right space-x-2">
+                                ${req.status === 'PENDENTE' ? `
+                                    <button onclick="approveCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-brand-500 text-slate-950 font-bold rounded hover:bg-brand-400 transition">Aprovar & Promover</button>
+                                    <button onclick="rejectCompanyRequest('${req.id}')" class="px-2.5 py-1 bg-rose-500/20 text-rose-400 font-bold rounded hover:bg-rose-500/30 transition">Rejeitar</button>
+                                ` : '<span class="text-slate-500">Concluído</span>'}
+                            </td>
+                        `;
+                        reqTable.appendChild(tr);
+                    });
+                }
             }
 
-            // 3. GESTÃO DE USUÁRIOS (PROMOÇÃO E DES-PROMOÇÃO EM TEMPO REAL)
             const userTable = document.getElementById('admin-users-table');
-            userTable.innerHTML = '';
+            if (userTable) {
+                userTable.innerHTML = '';
 
-            usersDatabase.forEach(usr => {
-                let actionButtonsHTML = '';
+                usersDatabase.forEach(usr => {
+                    let actionButtonsHTML = '';
 
-                if (usr.role === 'PUBLICO') {
-                    actionButtonsHTML = `
-                        <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-arrow-up mr-1"></i> Promover a Empresa
-                        </button>
-                        <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
-                        </button>
-                    `;
-                } else if (usr.role === 'EMPRESA') {
-                    actionButtonsHTML = `
-                        <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
-                        </button>
-                        <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
-                        </button>
-                    `;
-                } else if (usr.role === 'ADMIN') {
-                    actionButtonsHTML = `
-                        <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-building mr-1"></i> Alterar para Empresa
-                        </button>
-                        <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
-                            <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
-                        </button>
-                    `;
-                }
+                    if (usr.role === 'PUBLICO') {
+                        actionButtonsHTML = `
+                            <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-arrow-up mr-1"></i> Promover a Empresa
+                            </button>
+                            <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
+                            </button>
+                        `;
+                    } else if (usr.role === 'EMPRESA') {
+                        actionButtonsHTML = `
+                            <button onclick="promoteUserRole('${usr.id}', 'ADMIN')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Promover a Admin
+                            </button>
+                            <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
+                            </button>
+                        `;
+                    } else if (usr.role === 'ADMIN') {
+                        actionButtonsHTML = `
+                            <button onclick="promoteUserRole('${usr.id}', 'EMPRESA')" class="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-building mr-1"></i> Alterar para Empresa
+                            </button>
+                            <button onclick="promoteUserRole('${usr.id}', 'PUBLICO')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold rounded text-xs transition">
+                                <i class="fa-solid fa-arrow-down mr-1"></i> Rebaixar para Público
+                            </button>
+                        `;
+                    }
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3.5 font-bold text-white">${usr.name}</td>
-                    <td class="p-3.5 text-slate-300">${usr.email}</td>
-                    <td class="p-3.5"><span class="px-2.5 py-1 ${usr.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (usr.role === 'EMPRESA' ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' : 'bg-slate-700 text-brand-400')} font-extrabold rounded text-[10px]">${usr.role}</span></td>
-                    <td class="p-3.5 text-right space-x-1">${actionButtonsHTML}</td>
-                `;
-                userTable.appendChild(tr);
-            });
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3.5 font-bold text-white">${escapeHtml(usr.name)}</td>
+                        <td class="p-3.5 text-slate-300">${escapeHtml(usr.email)}</td>
+                        <td class="p-3.5"><span class="px-2.5 py-1 ${usr.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (usr.role === 'EMPRESA' ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' : 'bg-slate-700 text-brand-400')} font-extrabold rounded text-[10px]">${usr.role}</span></td>
+                        <td class="p-3.5 text-right space-x-1">${actionButtonsHTML}</td>
+                    `;
+                    userTable.appendChild(tr);
+                });
+            }
         }
 
-        // Alterar Papel de Usuário em Tempo Real
         function promoteUserRole(userId, newRole) {
             const usr = usersDatabase.find(u => u.id === userId);
             if (!usr) return;
@@ -1718,33 +1878,193 @@
             }
         }
 
-        function saveProfile(e) {
-            e.preventDefault();
-            if (!currentUser) return;
+        function handleLoginSubmit(e) {
+            if (e) e.preventDefault();
+            try {
+                const emailInp = document.getElementById('login-email');
+                const passInp = document.getElementById('login-password');
+                const email = emailInp ? emailInp.value.trim() : '';
+                const password = passInp ? passInp.value : '';
 
-            currentUser.name = document.getElementById('input-name').value.trim();
-            currentUser.email = document.getElementById('input-email').value.trim();
-            currentUser.initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+                const user = usersDatabase.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
 
-            const idx = usersDatabase.findIndex(u => u.id === currentUser.id);
-            if (idx !== -1) {
-                usersDatabase[idx] = currentUser;
+                if (user) {
+                    currentUser = user;
+                    saveDatabase();
+                    closeModal('modal-login');
+                    navigateTo('home');
+                    updateAuthState();
+                    showToast(`Bem-vindo de volta, ${user.name}!`);
+                } else {
+                    showNoticeModal('Falha no Login', 'E-mail ou senha inválidos.');
+                }
+            } catch (err) {
+                console.error("Erro no login:", err);
             }
-
-            saveDatabase();
-            updateAuthState();
-            showNoticeModal('Perfil Salvo', 'Seus dados cadastrais foram atualizados com sucesso.', 'check');
+            return false;
         }
 
-        // Controls e Modais Auxiliares
+        function handleRegisterSubmit(e) {
+            if (e) e.preventDefault();
+            try {
+                const nameInp = document.getElementById('reg-name');
+                const emailInp = document.getElementById('reg-email');
+                const passInp = document.getElementById('reg-password');
+
+                const name = nameInp ? nameInp.value.trim() : '';
+                const email = emailInp ? emailInp.value.trim() : '';
+                const password = passInp ? passInp.value : '';
+
+                if (!name || !email || !password) {
+                    showNoticeModal('Dados Incompletos', 'Preencha todos os campos.');
+                    return false;
+                }
+
+                if (usersDatabase.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                    showNoticeModal('E-mail em Uso', 'Este e-mail já está cadastrado.');
+                    return false;
+                }
+
+                const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+
+                const newUser = {
+                    id: `usr-${Date.now()}`,
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: 'PUBLICO',
+                    initials: initials
+                };
+
+                usersDatabase.push(newUser);
+                currentUser = newUser;
+                saveDatabase();
+
+                closeModal('modal-cadastro');
+                navigateTo('home');
+                updateAuthState();
+                showNoticeModal('Conta Criada!', `Sua conta [PUBLICO] foi cadastrada com sucesso!`, 'check');
+            } catch (err) {
+                console.error("Erro no cadastro:", err);
+            }
+            return false;
+        }
+
+        function logout() {
+            currentUser = null;
+            saveDatabase();
+            navigateTo('home');
+            updateAuthState();
+            showToast('Você encerrou sua sessão.');
+        }
+
+        function submitCompanyBindingRequest(e) {
+            if (e) e.preventDefault();
+            try {
+                const name = document.getElementById('req-company-name').value;
+                const cnpj = document.getElementById('req-cnpj').value;
+                const email = document.getElementById('req-email').value;
+                const desc = document.getElementById('req-desc').value;
+
+                const newReq = {
+                    id: `REQ-${Math.floor(100 + Math.random() * 900)}`,
+                    company_name: name,
+                    cnpj: cnpj,
+                    email: email,
+                    description: desc,
+                    status: 'PENDENTE',
+                    user_id: currentUser ? currentUser.id : 'usr-1'
+                };
+
+                companyRequests.push(newReq);
+                saveDatabase();
+
+                renderUserRequests();
+                renderAdminTables();
+                closeModal('modal-solicitar-vinculacao');
+                showNoticeModal('Proposta Enviada', 'Sua solicitação foi enviada para auditoria da administração.');
+            } catch (err) {
+                console.error("Erro na solicitação:", err);
+            }
+            return false;
+        }
+
+        function renderUserRequests() {
+            const list = document.getElementById('user-requests-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            const userReqs = currentUser 
+                ? companyRequests.filter(r => r.user_id === currentUser.id || (r.email && r.email.toLowerCase() === currentUser.email.toLowerCase()))
+                : [];
+
+            if (userReqs.length === 0) {
+                list.innerHTML = `
+                    <div class="p-4 text-center text-xs text-slate-400 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-1">
+                        <i class="fa-solid fa-inbox text-slate-500 text-lg block mb-1"></i>
+                        <p class="font-medium text-slate-300">Nenhuma solicitação submetida até o momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            userReqs.forEach(req => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-slate-900 border border-slate-700/60 rounded-xl flex items-center justify-between text-xs';
+                item.innerHTML = `
+                    <div>
+                        <strong class="text-white block">${escapeHtml(req.company_name)} (${escapeHtml(req.cnpj)})</strong>
+                        <span class="text-slate-400">${escapeHtml(req.description)}</span>
+                    </div>
+                    <span class="px-2.5 py-1 rounded font-bold uppercase ${req.status === 'APROVADO' ? 'bg-brand-500/20 text-brand-400' : (req.status === 'REJEITADO' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400')}">
+                        ${req.status}
+                    </span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function saveProfile(e) {
+            if (e) e.preventDefault();
+            try {
+                if (!currentUser) return false;
+
+                const inpName = document.getElementById('input-name');
+                const inpEmail = document.getElementById('input-email');
+
+                if (inpName) currentUser.name = inpName.value.trim();
+                if (inpEmail) currentUser.email = inpEmail.value.trim();
+                currentUser.initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+
+                const idx = usersDatabase.findIndex(u => u.id === currentUser.id);
+                if (idx !== -1) {
+                    usersDatabase[idx] = currentUser;
+                }
+
+                saveDatabase();
+                updateAuthState();
+                showNoticeModal('Perfil Salvo', 'Seus dados cadastrais foram atualizados com sucesso.', 'check');
+            } catch (err) {
+                console.error("Erro ao salvar perfil:", err);
+            }
+            return false;
+        }
+
+        // Modais e Utilitários
         function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-            document.getElementById(id).classList.add('flex');
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            }
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            document.getElementById(id).classList.remove('flex');
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+            }
         }
 
         function switchToRegisterModal() {
@@ -1758,48 +2078,54 @@
         }
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+            const m = document.getElementById('mobile-menu');
+            if (m) m.classList.toggle('hidden');
         }
 
-        // Modal de Aviso e Toast Personalizados
         function showNoticeModal(title, message, iconType = 'warning', actions = null) {
-            document.getElementById('notice-title').textContent = title;
-            document.getElementById('notice-message').textContent = message;
+            const titleElem = document.getElementById('notice-title');
+            const msgElem = document.getElementById('notice-message');
+            if (titleElem) titleElem.textContent = title;
+            if (msgElem) msgElem.textContent = message;
 
             const iconContainer = document.getElementById('notice-icon-container');
-            if (iconType === 'check') {
-                iconContainer.className = 'w-14 h-14 bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mx-auto text-2xl';
-                iconContainer.innerHTML = '<i class="fa-solid fa-check"></i>';
-            } else if (iconType === 'lock') {
-                iconContainer.className = 'w-14 h-14 bg-sky-500/20 text-sky-400 rounded-full flex items-center justify-center mx-auto text-2xl';
-                iconContainer.innerHTML = '<i class="fa-solid fa-lock"></i>';
-            } else {
-                iconContainer.className = 'w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl';
-                iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            if (iconContainer) {
+                if (iconType === 'check') {
+                    iconContainer.className = 'w-14 h-14 bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                    iconContainer.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (iconType === 'lock') {
+                    iconContainer.className = 'w-14 h-14 bg-sky-500/20 text-sky-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                    iconContainer.innerHTML = '<i class="fa-solid fa-lock"></i>';
+                } else {
+                    iconContainer.className = 'w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl';
+                    iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                }
             }
 
             const actionContainer = document.getElementById('notice-action-buttons');
-            actionContainer.innerHTML = '';
+            if (actionContainer) {
+                actionContainer.innerHTML = '';
 
-            if (actions && Array.isArray(actions)) {
-                actions.forEach(act => {
+                if (actions && Array.isArray(actions)) {
+                    actions.forEach(act => {
+                        const btn = document.createElement('button');
+                        btn.className = act.primary 
+                            ? 'w-full py-2.5 mb-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition' 
+                            : 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
+                        btn.textContent = act.label;
+                        btn.onclick = () => {
+                            closeModal('modal-custom-notice');
+                            if (act.action) act.action();
+                        };
+                        actionContainer.appendChild(btn);
+                    });
+                } else {
                     const btn = document.createElement('button');
-                    btn.className = act.primary 
-                        ? 'w-full py-2.5 mb-2 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold rounded-xl text-xs transition' 
-                        : 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
-                    btn.textContent = act.label;
-                    btn.onclick = () => {
-                        closeModal('modal-custom-notice');
-                        if (act.action) act.action();
-                    };
+                    btn.className = 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
+                    btn.textContent = 'Entendido';
+                    btn.onclick = () => closeModal('modal-custom-notice');
                     actionContainer.appendChild(btn);
-                });
-            } else {
-                const btn = document.createElement('button');
-                btn.className = 'w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition';
-                btn.textContent = 'Entendido';
-                btn.onclick = () => closeModal('modal-custom-notice');
-                actionContainer.appendChild(btn);
+                }
             }
 
             openModal('modal-custom-notice');
@@ -1807,9 +2133,10 @@
 
         function showToast(message) {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
             toast.className = 'bg-slate-800 border border-brand-500/40 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 opacity-0 translate-y-2 pointer-events-auto';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-400 text-sm"></i> ${message}`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-400 text-sm"></i> ${escapeHtml(message)}`;
             
             container.appendChild(toast);
 
