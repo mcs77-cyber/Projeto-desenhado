@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tickets - Gestão de Eventos e Ingressos</title>
+    <title>All Tickets - Gestão Centralizada de Eventos e Ingressos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -49,15 +49,16 @@
 </head>
 <body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white relative">
 
-    <!-- BARRA DE SIMULAÇÃO RÁPIDA DE SESSÃO / PERMISSÕES (RBAC) -->
+    <!-- BARRA DE SIMULAÇÃO RÁPIDA DE PERFIS (RBAC) -->
     <div id="role-bar" class="bg-slate-950 border-b border-slate-800 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
         <div class="flex items-center gap-2">
-            <span class="bg-brand-500/10 text-brand-500 px-2 py-0.5 rounded font-semibold border border-brand-500/20 flex items-center gap-1">
+            <span class="bg-brand-500/10 text-brand-500 px-2.5 py-0.5 rounded font-semibold border border-brand-500/20 flex items-center gap-1.5">
                 <i class="fa-solid fa-sliders"></i> Teste Rápido de Perfis
             </span>
-            <span class="text-slate-400 hidden md:inline">Alterne instantaneamente o usuário autenticado:</span>
+            <span class="text-slate-400 hidden sm:inline">Alterne o perfil autenticado em tempo real:</span>
         </div>
-        <div class="flex items-center gap-1 sm:gap-2">
+        
+        <div class="flex items-center gap-1.5 flex-wrap">
             <button onclick="switchQuickUser('deslogado')" id="btn-quick-deslogado" class="px-2.5 py-1 rounded text-slate-300 bg-slate-800 hover:bg-slate-700 transition font-medium">
                 <i class="fa-solid fa-user-slash mr-1"></i> Deslogado
             </button>
@@ -110,7 +111,7 @@
                         </button>
                     </div>
 
-                    <!-- Módulos Exclusivos (RBAC Strict: Painel Empresa visível apenas para EMPRESA, Painel ADM visível apenas para ADMIN) -->
+                    <!-- Módulos Exclusivos (Strict RBAC: Painel Empresa APENAS para perfil EMPRESA, Painel ADM APENAS para ADMIN) -->
                     <div class="flex items-center gap-1">
                         <button onclick="navigateTo('empresa')" id="nav-empresa" class="nav-btn hidden px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
                             <i class="fa-solid fa-building-user text-sky-400"></i>
@@ -123,7 +124,7 @@
                     </div>
 
                     <div id="auth-buttons-container" class="ml-1 pl-1 border-l border-slate-700/80">
-                        <!-- Injetado via JS de acordo com autenticação -->
+                        <!-- Injetado via JS -->
                     </div>
                 </div>
 
@@ -183,13 +184,13 @@
             <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 border border-slate-800 p-8 sm:p-12">
                 <div class="relative z-10 max-w-2xl space-y-4">
                     <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
-                        <i class="fa-solid fa-bolt mr-1"></i> All Tickets System
+                        <i class="fa-solid fa-bolt mr-1"></i> ALL TICKETS SYSTEM
                     </span>
                     <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
                         Gestão Centralizada de Eventos e Ingressos Digitais.
                     </h1>
                     
-                    <!-- Barra de Pesquisa e Botão "Virar Empresa" (Visível apenas para perfil PUBLICO) -->
+                    <!-- Barra de Pesquisa e Botão "Virar Empresa" (Visível apenas para PUBLICO) -->
                     <div class="pt-2 flex items-center gap-3 max-w-lg flex-wrap sm:flex-nowrap">
                         <div class="relative flex-1 w-full">
                             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -205,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- Categorias Oficiais do Sistema -->
+            <!-- Categorias Oficiais -->
             <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
                 <button onclick="filterCategory('todos')" class="cat-btn px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-bold whitespace-nowrap shadow-lg shadow-brand-500/20">Todos os Eventos</button>
                 <button onclick="filterCategory('Shows e Festivais')" class="cat-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold whitespace-nowrap transition">Shows e Festivais</button>
@@ -238,7 +239,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Profile Card Unificado -->
+                <!-- Profile Card -->
                 <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
                     <div class="text-center space-y-3">
                         <div class="w-24 h-24 mx-auto rounded-full bg-slate-700 border-4 border-brand-500/30 flex items-center justify-center text-4xl text-slate-300 font-bold relative">
@@ -248,7 +249,7 @@
                             </span>
                         </div>
                         <div>
-                            <h3 id="profile-name" class="text-lg font-bold text-white">Usuário do Sistema</h3>
+                            <h3 id="profile-name" class="text-lg font-bold text-white">Usuário Autenticado</h3>
                             <p id="profile-email" class="text-xs text-slate-400">usuario@email.com</p>
                         </div>
                         <span id="profile-badge" class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-bold uppercase">
@@ -268,7 +269,7 @@
                     </div>
                 </div>
 
-                <!-- Form e Seção Dinâmica de Vinculação -->
+                <!-- Form e Seção de Vinculação para Perfil PUBLICO -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-6">
                         <h3 class="text-base font-bold text-white border-b border-slate-700/60 pb-3 flex items-center gap-2">
@@ -295,7 +296,7 @@
                         </form>
                     </div>
 
-                    <!-- Card de Solicitação de Parceria (Apenas visível se o papel for PUBLICO) -->
+                    <!-- Card de Solicitação de Parceria (Oculto para EMPRESA/ADMIN) -->
                     <div id="partner-request-section" class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-6 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
                             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -309,7 +310,7 @@
                             Submeta seus dados de CNPJ para transformar seu perfil de PUBLICO para EMPRESA e publicar seus próprios eventos na plataforma.
                         </p>
                         <div id="user-requests-list" class="space-y-2 pt-2">
-                            <!-- Injetado dinamicamente via JS -->
+                            <!-- Injetado dinamicamente via JS e filtrado por usuário -->
                         </div>
                     </div>
                 </div>
@@ -323,12 +324,12 @@
                     <h2 class="text-2xl font-extrabold text-white flex items-center gap-3">
                         <i class="fa-solid fa-wallet text-brand-500"></i> Carteira Digital de Ingressos
                     </h2>
-                    <p class="text-sm text-slate-400">Seus bilhetes com códigos únicos para apresentação na portaria.</p>
+                    <p class="text-sm text-slate-400">Seus bilhetes com códigos únicos para apresentação na portaria (sem QR Code).</p>
                 </div>
             </div>
 
             <div id="tickets-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Ingressos em carteira renderizados via JS -->
+                <!-- Ingressos renderizados via JS -->
             </div>
         </section>
 
@@ -362,7 +363,7 @@
                 </div>
             </div>
 
-            <!-- MÓDULO VALIDADOR DE PORTARIA (POR CÓDIGO DIGITADO) -->
+            <!-- MÓDULO VALIDADOR DE PORTARIA (CÓDIGO DIGITADO) -->
             <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4 shadow-xl">
                 <div class="flex items-center gap-3 border-b border-slate-700/60 pb-3">
                     <div class="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold">
@@ -404,7 +405,7 @@
                             </tr>
                         </thead>
                         <tbody id="company-events-table" class="divide-y divide-slate-700/40">
-                            <!-- Linhas renderizadas via JS -->
+                            <!-- Renderizado via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -435,7 +436,7 @@
                 </div>
             </div>
 
-            <!-- NOVA SEÇÃO: DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS (ADMIN VISION) -->
+            <!-- DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS (ADMIN VISION) -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -457,7 +458,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-companies-table" class="divide-y divide-slate-700/40">
-                            <!-- Renderizado via JS com dados gerenciais das empresas -->
+                            <!-- Renderizado via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -483,13 +484,13 @@
                             </tr>
                         </thead>
                         <tbody id="admin-requests-table" class="divide-y divide-slate-700/40">
-                            <!-- Renderizado via JS (sem itens fictícios pré-carregados) -->
+                            <!-- Renderizado via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Tabela de Gestão de Usuários e Alteração Dinâmica de Papéis -->
+            <!-- Gestão de Usuários e Alteração Dinâmica de Papéis -->
             <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 overflow-hidden">
                 <div class="p-4 border-b border-slate-700/60 font-bold text-white flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -507,7 +508,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-users-table" class="divide-y divide-slate-700/40">
-                            <!-- Renderizado dinamicamente via JS -->
+                            <!-- Renderizado via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -563,12 +564,12 @@
 
             <form onsubmit="handleRegisterSubmit(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Nome Completo ou Nome Fantasia</label>
-                    <input type="text" id="reg-name" required placeholder="Ex: Maria Santos" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                    <label class="block text-xs text-slate-400 mb-1">Nome Completo</label>
+                    <input type="text" id="reg-name" required placeholder="Ex: Marcos Santos" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">E-mail</label>
-                    <input type="email" id="reg-email" required placeholder="seu.email@dominio.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
+                    <input type="email" id="reg-email" required placeholder="marcos@gmail.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Senha</label>
@@ -594,7 +595,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: CHECKOUT DE COMPRA DE INGRESSO -->
+    <!-- MODAL 3: CHECKOUT DE COMPRA -->
     <div id="modal-comprar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
             <button onclick="closeModal('modal-comprar')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -638,7 +639,7 @@
         </div>
     </div>
 
-    <!-- MODAL 4: TELA DE COMPRA FINALIZADA -->
+    <!-- MODAL 4: COMPRA FINALIZADA (SUCESSO) -->
     <div id="modal-compra-sucesso" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-brand-500/40 rounded-3xl max-w-md w-full p-6 text-center space-y-5 shadow-2xl relative">
             <button onclick="closeModal('modal-compra-sucesso')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -687,53 +688,58 @@
 
     <!-- MODAL 5: SOLICITAR VINCULAÇÃO EMPRESARIAL -->
     <div id="modal-solicitar-vinculacao" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
             <button onclick="closeModal('modal-solicitar-vinculacao')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-building text-sky-400"></i> Solicitar Vinculação de Empresa
-            </h3>
-            <p class="text-xs text-slate-400">Submeta a proposta da sua empresa para aprovação da equipe administrativa.</p>
+            <div>
+                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Parceria Comercial</span>
+                <h3 class="text-xl font-bold text-white">Solicitar Vinculação Empresarial</h3>
+            </div>
+            
             <form onsubmit="submitCompanyBindingRequest(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Nome Fantasia / Razão Social</label>
-                    <input type="text" id="req-company-name" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    <label class="block text-xs text-slate-400 mb-1">Razão Social / Nome da Empresa</label>
+                    <input type="text" id="req-company-name" required placeholder="Ex: Maceió Sounds Produções" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">CNPJ</label>
+                        <input type="text" id="req-cnpj" required placeholder="12.345.678/0001-90" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">E-mail Comercial</label>
+                        <input type="email" id="req-email" required placeholder="contato@empresa.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">CNPJ</label>
-                    <input type="text" id="req-cnpj" required placeholder="00.000.000/0001-00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">E-mail Comercial</label>
-                    <input type="email" id="req-email" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Proposta da Produtora</label>
-                    <textarea id="req-desc" required rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+                    <label class="block text-xs text-slate-400 mb-1">Descrição das Atividades / Proposta</label>
+                    <textarea id="req-desc" required rows="3" placeholder="Conte brevemente sobre o tipo de eventos que deseja produzir..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400 resize-none"></textarea>
                 </div>
                 <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
-                    Enviar Solicitação
+                    Submeter Proposta para Auditoria ADM
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 6: CADASTRAR NOVO EVENTO -->
+    <!-- MODAL 6: CADASTRAR NOVO EVENTO (EMPRESA) -->
     <div id="modal-novo-evento" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
             <button onclick="closeModal('modal-novo-evento')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-calendar-plus text-sky-400"></i> Cadastrar Novo Evento
-            </h3>
+            <div>
+                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Painel do Produtor</span>
+                <h3 class="text-xl font-bold text-white">Publicar Novo Evento</h3>
+            </div>
+            
             <form id="form-create-event" onsubmit="createEvent(event)" class="space-y-3">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Título da Atração</label>
                     <input type="text" id="new-title" required placeholder="Ex: Festival de Verão 2026" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
                 </div>
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs text-slate-400 mb-1">Categoria</label>
                         <select id="new-cat" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
@@ -743,86 +749,159 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-slate-400 mb-1">Preço (R$)</label>
-                        <input type="number" step="0.01" id="new-price" required placeholder="100.00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Estoque</label>
-                        <input type="number" id="new-stock" required min="1" value="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-sky-400">
+                        <label class="block text-xs text-slate-400 mb-1">Preço Unitário (R$)</label>
+                        <input type="number" id="new-price" step="0.01" min="0" required placeholder="100.00" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-paper-plane"></i> Publicar Evento Instantaneamente
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Estoque Inicial de Ingressos</label>
+                    <input type="number" id="new-stock" min="1" required placeholder="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition mt-2">
+                    Publicar Atração Imediatamente
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 7: NOTIFICAÇÃO / AVISO ESTILIZADO -->
+    <!-- MODAL 7: AVISO E NOTIFICAÇÃO PERSONALIZADA (SEM ALERTS NATIVOS) -->
     <div id="modal-custom-notice" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
-            <button onclick="closeModal('modal-custom-notice')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            
             <div id="notice-icon-container" class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-
+            
             <div class="space-y-1">
-                <h3 id="notice-title" class="text-lg font-bold text-white">Atenção</h3>
-                <p id="notice-message" class="text-xs text-slate-300 leading-relaxed">Mensagem de aviso aqui.</p>
+                <h3 id="notice-title" class="text-lg font-bold text-white">Título do Aviso</h3>
+                <p id="notice-message" class="text-xs text-slate-400">Mensagem detalhada do aviso...</p>
             </div>
 
-            <div id="notice-action-buttons" class="pt-2">
-                <button onclick="closeModal('modal-custom-notice')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition">
-                    Entendido
-                </button>
+            <div id="notice-action-buttons" class="pt-2 flex flex-col gap-2">
+                <!-- Botões dinâmicos injetados via JS -->
             </div>
         </div>
     </div>
 
-    <!-- CONTAINER DE TOASTS FLUTUANTES -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+    <!-- TOAST NOTIFICATIONS (POPUP CANTINHO DA TELA) -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- JAVASCRIPT PRINCIPAL -->
+    <!-- JAVASCRIPT PRINCIPAL E BANCO DE DADOS LOCALSTORAGE PERSISTENTE -->
     <script>
-        // Banco de dados central em memória
-        const usersDatabase = [
-            { id: 'usr-1', name: 'Lucas Silva', email: 'lucas.silva@email.com', password: '123', role: 'PUBLICO', initials: 'LS' },
-            { id: 'usr-2', name: 'Live Marketing Produções', email: 'contato@livemarketing.com.br', password: '123', role: 'EMPRESA', initials: 'LM' },
-            { id: 'usr-3', name: 'Suporte All Tickets', email: 'admin@alltickets.com.br', password: '123', role: 'ADMIN', initials: 'AT' }
-        ];
+        const DB_STORAGE_KEY = 'ALL_TICKETS_DATABASE_V1';
 
-        let currentUser = null; // null = Deslogado
+        // Dados padrão de demonstração para inicialização
+        const defaultInitialData = {
+            users: [
+                { id: 'usr-1', name: 'Lucas Silva', email: 'lucas.silva@email.com', password: '123', role: 'PUBLICO', initials: 'LS' },
+                { id: 'usr-2', name: 'Live Marketing Produções', email: 'contato@livemarketing.com.br', password: '123', role: 'EMPRESA', initials: 'LM' },
+                { id: 'usr-3', name: 'Suporte All Tickets', email: 'admin@alltickets.com.br', password: '123', role: 'ADMIN', initials: 'AT' }
+            ],
+            events: [
+                { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
+                { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
+                { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
+            ],
+            tickets: [
+                { id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', user_id: 'usr-1', event_id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', event_title: 'Maceió Summer Sounds 2026', price: 100.00, qr_hash: 'QR-A9F82B10C4', is_used: false, created_at: '2026-09-17T09:10:00Z' }
+            ],
+            transactions: [
+                { id: 'fin-1', ticket_id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', company_id: 'usr-2', total_amount: 100.00, company_share_80: 80.00, platform_share_20: 20.00 }
+            ],
+            companyRequests: [],
+            sessionUserId: null
+        };
 
-        // Fila de solicitações de vinculação zerada (sem solicitações fictícias)
+        // Arrays de estado mantidos em memória
+        const usersDatabase = [];
+        const eventsDatabase = [];
+        const ticketsDatabase = [];
+        const financialTransactions = [];
         const companyRequests = [];
 
-        const eventsDatabase = [
-            { id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', company_id: 'usr-2', title: 'Maceió Summer Sounds 2026', category: 'Shows e Festivais', price: 100.00, stock: 50, likes_count: 24, img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80' },
-            { id: 'e4b9910d-3c4a-5f51-a883-82f701b919b3', company_id: 'usr-2', title: 'Teatro Comedy Night Alagoas', category: 'Teatro e Cultura', price: 60.00, stock: 20, likes_count: 12, img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80' },
-            { id: 'e5c0010d-4d4a-6f51-c883-72f701b920c4', company_id: 'usr-2', title: 'Nightlife Premium Party', category: 'Festas e Nightlife', price: 120.00, stock: 0, likes_count: 45, img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80' }
-        ];
-
-        const ticketsDatabase = [
-            { id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', user_id: 'usr-1', event_id: 'e3a8910d-2b4a-4f51-b883-92f701b918a2', event_title: 'Maceió Summer Sounds 2026', price: 100.00, qr_hash: 'QR-A9F82B10C4', is_used: false, created_at: '2026-09-17T09:10:00Z' }
-        ];
-
-        const financialTransactions = [
-            { id: 'fin-1', ticket_id: '8f3b20a1-9d11-4c62-81e3-2e008a129999', company_id: 'usr-2', total_amount: 100.00, company_share_80: 80.00, platform_share_20: 20.00 }
-        ];
-
+        let currentUser = null; // null = Deslogado
         let selectedEventForPurchase = null;
 
-        // Inicialização do App
+        // Função de carregamento transparente do LocalStorage
+        function loadDatabase() {
+            try {
+                const stored = localStorage.getItem(DB_STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && Array.isArray(parsed.users) && Array.isArray(parsed.events)) {
+                        usersDatabase.length = 0;
+                        parsed.users.forEach(u => usersDatabase.push(u));
+
+                        eventsDatabase.length = 0;
+                        parsed.events.forEach(e => eventsDatabase.push(e));
+
+                        ticketsDatabase.length = 0;
+                        (parsed.tickets || []).forEach(t => ticketsDatabase.push(t));
+
+                        financialTransactions.length = 0;
+                        (parsed.transactions || []).forEach(tr => financialTransactions.push(tr));
+
+                        companyRequests.length = 0;
+                        (parsed.companyRequests || []).forEach(r => companyRequests.push(r));
+
+                        if (parsed.sessionUserId) {
+                            currentUser = usersDatabase.find(u => u.id === parsed.sessionUserId) || null;
+                        } else {
+                            currentUser = null;
+                        }
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.error("Erro ao ler banco de dados local:", err);
+            }
+
+            resetStateToDefaultData();
+            saveDatabase();
+        }
+
+        // Salvamento no LocalStorage
+        function saveDatabase() {
+            try {
+                const payload = {
+                    users: usersDatabase,
+                    events: eventsDatabase,
+                    tickets: ticketsDatabase,
+                    transactions: financialTransactions,
+                    companyRequests: companyRequests,
+                    sessionUserId: currentUser ? currentUser.id : null
+                };
+                localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(payload));
+            } catch (err) {
+                console.error("Erro ao salvar dados localmente:", err);
+            }
+        }
+
+        function resetStateToDefaultData() {
+            usersDatabase.length = 0;
+            defaultInitialData.users.forEach(u => usersDatabase.push({...u}));
+
+            eventsDatabase.length = 0;
+            defaultInitialData.events.forEach(e => eventsDatabase.push({...e}));
+
+            ticketsDatabase.length = 0;
+            defaultInitialData.tickets.forEach(t => ticketsDatabase.push({...t}));
+
+            financialTransactions.length = 0;
+            defaultInitialData.transactions.forEach(tr => financialTransactions.push({...tr}));
+
+            companyRequests.length = 0;
+            currentUser = null;
+        }
+
+        // Inicialização da Aplicação
         document.addEventListener('DOMContentLoaded', () => {
+            loadDatabase();
             renderEvents(eventsDatabase);
             updateAuthState();
             navigateTo('home');
         });
 
-        // Alternar Sessão Rapidamente via Simulador Superior
+        // Alternar Sessão Rapidamente via Barra Superior (Troca de Contas)
         function switchQuickUser(userId) {
             if (userId === 'deslogado') {
                 currentUser = null;
@@ -830,20 +909,20 @@
                 currentUser = usersDatabase.find(u => u.id === userId) || null;
             }
             
-            // REDIRECIONAMENTO OBRIGATÓRIO PARA A TELA INICIAL (FEED)
+            saveDatabase();
+            // REDIRECIONAMENTO OBRIGATÓRIO PARA A TELA INICIAL (FEED DE EVENTOS)
             navigateTo('home');
             updateAuthState();
-            showToast(currentUser ? `Autenticado como ${currentUser.name} [${currentUser.role}]` : 'Sessão encerrada. Bem-vindo!');
+            showToast(currentUser ? `Autenticado como ${currentUser.name} [${currentUser.role}]` : 'Sessão encerrada.');
         }
 
-        // Atualizar Estado de Autenticação e Regras de Visibilidade RBAC
+        // Atualizar Estado de Autenticação e Regras RBAC
         function updateAuthState() {
             const authContainer = document.getElementById('auth-buttons-container');
             const mobAuthContainer = document.getElementById('mobile-auth-container');
-
             const currentRole = currentUser ? currentUser.role : 'DESLOGADO';
 
-            // Destaque do Usuário na Barra Superior
+            // Destaque nos Botões da Barra Superior
             ['deslogado', 'usr-1', 'usr-2', 'usr-3'].forEach(id => {
                 const btn = document.getElementById(`btn-quick-${id}`);
                 if (btn) {
@@ -859,8 +938,8 @@
             const userDesc = document.getElementById('current-user-desc');
 
             if (!currentUser) {
-                userTitle.textContent = 'Visitante (Deslogado)';
-                userDesc.textContent = 'Navegação restrita. Entre na sua conta para adquirir ingressos ou gerenciar módulos empresariais.';
+                userTitle.textContent = 'Visitante (Não autenticado)';
+                userDesc.textContent = 'Navegação restrita. Faça login ou cadastre-se para adquirir ingressos ou acessar painéis empresariais.';
 
                 authContainer.innerHTML = `
                     <div class="flex items-center gap-2">
@@ -923,7 +1002,7 @@
             } else {
                 navGroupUser.classList.remove('opacity-40');
 
-                // Módulo Empresa: Apenas visível para perfil EMPRESA (Oculto para ADMIN)
+                // Módulo Empresa: Apenas visível para perfil EMPRESA (Oculto na navbar para ADMIN)
                 if (currentRole === 'EMPRESA') {
                     navEmpresa.classList.remove('hidden');
                     mobEmpresa.classList.remove('hidden');
@@ -951,7 +1030,7 @@
                 }
             }
 
-            // Atualização de dados nas abas ativas
+            // Atualizar dados de abas ativas
             renderProfileData();
             renderMyTickets();
             renderCompanyDashboard();
@@ -959,24 +1038,29 @@
             renderUserRequests();
         }
 
-        // Navegação de Abas
+        // Navegação entre Abas do Sistema
         function navigateTo(tabName) {
-            // Verificação de Acesso
+            // Verificação de Acesso RBAC
             if (!currentUser && (tabName === 'conta' || tabName === 'ingressos' || tabName === 'empresa' || tabName === 'adm')) {
-                showNoticeModal('Login Necessário', 'Você precisa estar logado na sua conta para acessar esta área.', 'lock', [
-                    { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
-                    { label: 'Cancelar', primary: false, action: () => {} }
-                ]);
+                showNoticeModal(
+                    '401 Unauthorized', 
+                    'Efetue o login para adquirir ingressos ou acessar áreas restritas do sistema.', 
+                    'lock', 
+                    [
+                        { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
+                        { label: 'Cancelar', primary: false, action: () => {} }
+                    ]
+                );
                 return;
             }
 
             if (currentUser) {
                 if (tabName === 'empresa' && currentUser.role !== 'EMPRESA') {
-                    showNoticeModal('Acesso Restrito', 'O Painel Empresa é exclusivo para organizadores cadastrados.');
+                    showNoticeModal('Acesso Restrito', 'O Painel Empresa é exclusivo para produtores parceiros.');
                     return;
                 }
                 if (tabName === 'adm' && currentUser.role !== 'ADMIN') {
-                    showNoticeModal('Acesso Negado', 'Apenas usuários administradores podem acessar o Painel ADM.');
+                    showNoticeModal('Acesso Negado', 'Apenas administradores têm permissão para acessar o Painel ADM.');
                     return;
                 }
             }
@@ -1008,7 +1092,7 @@
             document.getElementById('input-email').value = currentUser.email;
         }
 
-        // Renderizar Feed de Eventos
+        // Renderizar Vitrine de Eventos
         function renderEvents(events) {
             const grid = document.getElementById('events-grid');
             document.getElementById('event-count').textContent = `Exibindo ${events.length} evento(s)`;
@@ -1057,6 +1141,7 @@
             const evt = eventsDatabase.find(e => e.id === evtId);
             if (evt) {
                 evt.likes_count += 1;
+                saveDatabase();
                 renderEvents(eventsDatabase);
                 renderCompanyDashboard();
                 renderAdminTables();
@@ -1078,20 +1163,25 @@
             }
         }
 
-        // Abrir Checkout de Compra
+        // Abrir Modal de Checkout de Compra
         function openBuyModal(eventId) {
             if (!currentUser) {
-                showNoticeModal('Login Necessário', 'Para adquirir ingressos você precisa estar autenticado.', 'lock', [
-                    { label: 'Fazer Login', primary: true, action: () => openModal('modal-login') },
-                    { label: 'Cancelar', primary: false, action: () => {} }
-                ]);
+                showNoticeModal(
+                    '401 Unauthorized', 
+                    'Efetue o login para adquirir ingressos.', 
+                    'lock', 
+                    [
+                        { label: 'Entrar na Conta', primary: true, action: () => openModal('modal-login') },
+                        { label: 'Cancelar', primary: false, action: () => {} }
+                    ]
+                );
                 return;
             }
 
             selectedEventForPurchase = eventsDatabase.find(e => e.id === eventId);
             
             if (selectedEventForPurchase.stock <= 0) {
-                showNoticeModal('Estoque Esgotado', 'Desculpe, os ingressos para este evento já terminaram.');
+                showNoticeModal('Estoque Esgotado', 'Ingressos esgotados para este evento.');
                 return;
             }
 
@@ -1108,17 +1198,17 @@
             openModal('modal-comprar');
         }
 
-        // Executar Compra
+        // Confirmar Execução da Compra
         function executePurchase() {
             if (!selectedEventForPurchase) return;
 
             if (selectedEventForPurchase.stock <= 0) {
-                showNoticeModal('Estoque Esgotado', 'Estoque indisponível no momento da confirmação.');
+                showNoticeModal('Estoque Esgotado', 'Ingressos esgotados no momento da liquidação.');
                 closeModal('modal-comprar');
                 return;
             }
 
-            // Decrementar estoque
+            // Decrementar Estoque
             selectedEventForPurchase.stock -= 1;
 
             const ticketCode = 'QR-' + Math.random().toString(16).substring(2, 10).toUpperCase();
@@ -1146,6 +1236,7 @@
 
             ticketsDatabase.push(newTicket);
             financialTransactions.push(newTransaction);
+            saveDatabase();
 
             renderEvents(eventsDatabase);
             renderMyTickets();
@@ -1154,6 +1245,7 @@
 
             closeModal('modal-comprar');
 
+            // Exibir Tela de "Compra Finalizada Sucesso"
             document.getElementById('success-event-title').textContent = selectedEventForPurchase.title;
             document.getElementById('success-ticket-code').textContent = ticketCode;
             document.getElementById('success-event-price').textContent = `R$ ${total.toFixed(2)}`;
@@ -1161,7 +1253,7 @@
             openModal('modal-compra-sucesso');
         }
 
-        // Renderizar Ingressos Comprados
+        // Renderizar Ingressos Comprados (Carteira Digital sem QR Code)
         function renderMyTickets() {
             const container = document.getElementById('tickets-container');
             const myTickets = currentUser ? ticketsDatabase.filter(t => t.user_id === currentUser.id) : [];
@@ -1206,7 +1298,7 @@
             showToast(`Código ${text} copiado para a área de transferência!`);
         }
 
-        // Validar Portaria por Código
+        // Validar Portaria por Código Digitado
         function validateTicketGate() {
             const inputCode = document.getElementById('input-gate-hash').value.trim().toUpperCase();
             const resultBox = document.getElementById('gate-result-box');
@@ -1221,32 +1313,34 @@
 
             if (!ticket) {
                 resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-amber-500/20 border-amber-500/40 text-amber-300';
-                resultBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <strong>Código Inexistente:</strong> O bilhete "${inputCode}" não foi encontrado no banco de dados.`;
+                resultBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <strong>Código Inexistente:</strong> Código Hash de ingresso não encontrado no sistema.`;
                 resultBox.classList.remove('hidden');
                 return;
             }
 
             if (ticket.is_used) {
                 resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-rose-500/20 border-rose-500/40 text-rose-300';
-                resultBox.innerHTML = `<i class="fa-solid fa-ban mr-2"></i> <strong>ALERTA DE SEGURANÇA:</strong> Ingresso já utilizado anteriormente na portaria! Entrada Recusada.`;
+                resultBox.innerHTML = `<i class="fa-solid fa-ban mr-2"></i> <strong>ALERTA:</strong> Ingresso já utilizado anteriormente na portaria. Entrada recusada!`;
                 resultBox.classList.remove('hidden');
                 return;
             }
 
             ticket.is_used = true;
+            saveDatabase();
+
             resultBox.className = 'p-4 rounded-xl border text-sm font-medium bg-emerald-500/20 border-emerald-500/40 text-emerald-300';
-            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>Acesso Liberado:</strong> Bilhete "${ticket.event_title}" validado e queimado com sucesso!`;
+            resultBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <strong>Entrada Liberada:</strong> Bilhete "${ticket.event_title}" validado e queimado com sucesso!`;
             resultBox.classList.remove('hidden');
 
             renderMyTickets();
         }
 
-        // Criar Novo Evento (Empresa)
+        // Publicar Novo Evento (Empresa)
         function createEvent(e) {
             e.preventDefault();
 
             if (!currentUser || currentUser.role !== 'EMPRESA') {
-                showNoticeModal('Acesso Negado', 'Somente contas do tipo Empresa podem publicar novos eventos.');
+                showNoticeModal('Acesso Negado', 'Somente produtoras empresariais podem publicar atrações.');
                 return;
             }
 
@@ -1272,6 +1366,7 @@
             };
 
             eventsDatabase.unshift(newEvt);
+            saveDatabase();
 
             renderEvents(eventsDatabase);
             renderCompanyDashboard();
@@ -1280,10 +1375,10 @@
             document.getElementById('form-create-event').reset();
             closeModal('modal-novo-evento');
 
-            showNoticeModal('Atração Publicada!', `O evento "${title}" foi publicado com sucesso e já está disponível no Feed Principal.`, 'check');
+            showNoticeModal('Atração Publicada!', `O evento "${title}" foi publicado com sucesso no catálogo.`, 'check');
         }
 
-        // Login
+        // Processar Login
         function handleLoginSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
@@ -1293,16 +1388,18 @@
 
             if (user) {
                 currentUser = user;
+                saveDatabase();
                 closeModal('modal-login');
+                // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
                 navigateTo('home');
                 updateAuthState();
                 showToast(`Bem-vindo de volta, ${user.name}!`);
             } else {
-                showNoticeModal('Falha na Autenticação', 'E-mail ou senha incorretos. Tente novamente.');
+                showNoticeModal('Falha no Login', 'E-mail ou senha inválidos.');
             }
         }
 
-        // Registro (Forçado para PUBLICO)
+        // Processar Registro (Apenas PUBLICO)
         function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -1311,7 +1408,7 @@
             const role = 'PUBLICO';
 
             if (usersDatabase.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-                showNoticeModal('E-mail Já Cadastrado', 'Este e-mail já está sendo utilizado por outra conta.');
+                showNoticeModal('E-mail em Uso', 'Este e-mail já está cadastrado.');
                 return;
             }
 
@@ -1328,21 +1425,25 @@
 
             usersDatabase.push(newUser);
             currentUser = newUser;
+            saveDatabase();
 
             closeModal('modal-cadastro');
+            // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
             navigateTo('home');
             updateAuthState();
-            showNoticeModal('Conta Criada!', `Sua conta [PUBLICO] foi registrada com sucesso!`, 'check');
+            showNoticeModal('Conta Criada com Sucesso!', `Sua conta [PUBLICO] foi cadastrada e você já está autenticado!`, 'check');
         }
 
         function logout() {
             currentUser = null;
+            saveDatabase();
+            // REDIRECIONAR OBRIGATORIAMENTE PARA A PÁGINA INICIAL
             navigateTo('home');
             updateAuthState();
-            showToast('Você saiu da sua conta.');
+            showToast('Você encerrou sua sessão.');
         }
 
-        // Submeter Solicitação de Vinculação Empresarial
+        // Submeter Solicitação de Vinculação
         function submitCompanyBindingRequest(e) {
             e.preventDefault();
             const name = document.getElementById('req-company-name').value;
@@ -1361,12 +1462,15 @@
             };
 
             companyRequests.push(newReq);
+            saveDatabase();
+
             renderUserRequests();
             renderAdminTables();
             closeModal('modal-solicitar-vinculacao');
-            showNoticeModal('Proposta Enviada', 'Sua solicitação foi registrada na fila de auditoria administrativa.');
+            showNoticeModal('Proposta Enviada', 'Sua solicitação foi enviada para auditoria da administração.');
         }
 
+        // Renderizar Solicitações Filtradas para o Usuário Logado
         function renderUserRequests() {
             const list = document.getElementById('user-requests-list');
             if (!list) return;
@@ -1381,7 +1485,7 @@
                     <div class="p-4 text-center text-xs text-slate-400 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-1">
                         <i class="fa-solid fa-inbox text-slate-500 text-lg block mb-1"></i>
                         <p class="font-medium text-slate-300">Nenhuma solicitação submetida até o momento.</p>
-                        <p class="text-[11px] text-slate-500">Clique em "Nova Proposta" para enviar os dados da sua empresa para análise.</p>
+                        <p class="text-[11px] text-slate-500">Clique em "Nova Proposta" para submeter o CNPJ da sua empresa.</p>
                     </div>
                 `;
                 return;
@@ -1407,7 +1511,6 @@
         function renderCompanyDashboard() {
             if (!currentUser || currentUser.role !== 'EMPRESA') return;
 
-            // Filtrar eventos da empresa atual
             const companyEvents = eventsDatabase.filter(e => e.company_id === currentUser.id);
             const companyEventIds = companyEvents.map(e => e.id);
             
@@ -1446,7 +1549,7 @@
             });
         }
 
-        // Renderizar Painel ADMIN (Métricas Globais + Diretório de Empresas + Auditoria + Gestão de Usuários)
+        // Renderizar Painel ADMIN
         function renderAdminTables() {
             const elemGmv = document.getElementById('admin-kpi-gmv');
             if (!elemGmv) return;
@@ -1458,14 +1561,14 @@
             document.getElementById('admin-kpi-commission').textContent = `R$ ${commission.toFixed(2)}`;
             document.getElementById('admin-kpi-tickets').textContent = ticketsDatabase.length;
 
-            // 1. SEÇÃO: DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS
+            // 1. DIRETÓRIO GERENCIAL DE EMPRESAS CADASTRADAS
             const companiesTable = document.getElementById('admin-companies-table');
             const companiesList = usersDatabase.filter(u => u.role === 'EMPRESA');
             document.getElementById('admin-companies-count').textContent = `${companiesList.length} empresa(s)`;
             companiesTable.innerHTML = '';
 
             if (companiesList.length === 0) {
-                companiesTable.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Nenhuma empresa parceira cadastrada na plataforma.</td></tr>`;
+                companiesTable.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Nenhuma empresa parceira cadastrada.</td></tr>`;
             } else {
                 companiesList.forEach(comp => {
                     const compEvents = eventsDatabase.filter(e => e.company_id === comp.id);
@@ -1492,7 +1595,7 @@
                 });
             }
 
-            // 2. SEÇÃO: FILA DE AUDITORIA DE SOLICITAÇÕES
+            // 2. FILA DE AUDITORIA DE SOLICITAÇÕES
             const reqTable = document.getElementById('admin-requests-table');
             const pendingReqs = companyRequests.filter(r => r.status === 'PENDENTE');
             document.getElementById('requests-count').textContent = `${pendingReqs.length} pendente(s)`;
@@ -1519,7 +1622,7 @@
                 });
             }
 
-            // 3. SEÇÃO: GESTÃO DE USUÁRIOS (PROMOÇÃO E DES-PROMOÇÃO EM TEMPO REAL)
+            // 3. GESTÃO DE USUÁRIOS (PROMOÇÃO E DES-PROMOÇÃO EM TEMPO REAL)
             const userTable = document.getElementById('admin-users-table');
             userTable.innerHTML = '';
 
@@ -1566,7 +1669,7 @@
             });
         }
 
-        // Alteração em Tempo Real de Papel de Usuário
+        // Alterar Papel de Usuário em Tempo Real
         function promoteUserRole(userId, newRole) {
             const usr = usersDatabase.find(u => u.id === userId);
             if (!usr) return;
@@ -1574,11 +1677,11 @@
             const oldRole = usr.role;
             usr.role = newRole;
 
-            // Atualiza sessão ativa se o usuário alterado for o atual
             if (currentUser && currentUser.id === usr.id) {
                 currentUser.role = newRole;
             }
 
+            saveDatabase();
             updateAuthState();
             showNoticeModal(
                 'Papel Atualizado!', 
@@ -1598,8 +1701,9 @@
                         currentUser.role = 'EMPRESA';
                     }
                 }
+                saveDatabase();
                 updateAuthState();
-                showNoticeModal('Solicitação Aprovada', `A empresa "${req.company_name}" foi aprovada e o usuário associado foi promovido a EMPRESA.`, 'check');
+                showNoticeModal('Solicitação Aprovada', `A empresa "${req.company_name}" foi aprovada e o usuário foi promovido para o papel EMPRESA.`, 'check');
             }
         }
 
@@ -1607,6 +1711,7 @@
             const req = companyRequests.find(r => r.id === reqId);
             if (req) {
                 req.status = 'REJEITADO';
+                saveDatabase();
                 renderAdminTables();
                 renderUserRequests();
                 showToast('Solicitação rejeitada com sucesso.');
@@ -1621,11 +1726,17 @@
             currentUser.email = document.getElementById('input-email').value.trim();
             currentUser.initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
 
+            const idx = usersDatabase.findIndex(u => u.id === currentUser.id);
+            if (idx !== -1) {
+                usersDatabase[idx] = currentUser;
+            }
+
+            saveDatabase();
             updateAuthState();
             showNoticeModal('Perfil Salvo', 'Seus dados cadastrais foram atualizados com sucesso.', 'check');
         }
 
-        // Modais Auxiliares
+        // Controls e Modais Auxiliares
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             document.getElementById(id).classList.add('flex');
@@ -1650,7 +1761,7 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        // Notificações e Toasts Estilizados
+        // Modal de Aviso e Toast Personalizados
         function showNoticeModal(title, message, iconType = 'warning', actions = null) {
             document.getElementById('notice-title').textContent = title;
             document.getElementById('notice-message').textContent = message;
